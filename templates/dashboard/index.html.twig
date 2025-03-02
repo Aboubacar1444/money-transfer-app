@@ -101,45 +101,8 @@
         </div>
         <!-- Intro Section -->
     </section>
-    {#<section>
-        <!-- Intro Section StudentForm-->
-        <div class="modal fade" id="modalClientForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header text-center view view-cascade gradient-card-header blue-gradient">
-                        <i class="fas fa-user-plus fa-2x white-text mx-auto"></i>
-                        <h4 class="modal-title font-weight-bold white-text mx-auto">Création de compte - Client</h4>
-                        <button type="button" class="close text-white font-weight-bold" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body mx-3">
-                        <div class="container mask">
-                            {{ form_start(formclient) }}
-                                <div class="mx-auto mb-3">
-                                    <div class="md-form col-md-8 mx-auto">
-                                        {{ form_row(formclient.fullname) }}
-                                    </div>
-                                    <div class="md-form col-md-8 mx-auto">
-                                        {{ form_row(formclient.tel) }}
-                                    </div>
-                                    <div class="col-md-8 mx-auto">
-                                        {{ form_row(formclient.agency) }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <button type="submit" class="btn btn-outline-yellow btn-rounded font-weight-bold mx-auto">Valider</button>
-                                </div>
-                            {{ form_end(formclient) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Intro Section -->
-    </section>#}
-   {# {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SOUS_ADMIN') %}
+
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SOUS_ADMIN') %}
         <section>
             <!-- Intro Section StudentForm-->
             <div class="modal fade" id="modalCaisseForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -159,9 +122,9 @@
                                     <div class="mx-auto mb-3">
                                         <div class="md-form col-md-8 mx-auto">
                                               <select class="form-control md-form" name="" id="seletedCaisse">
-                                                  <option disabled selected>Selectionnez la caisse</option>
-                                                  <option value="FCFA">FCFA</option>
-#}{#                                                  <option value="$">Dollar</option>#}{#
+{#                                                  <option disabled selected>Selectionnez la caisse</option>#}
+                                                  <option value="FCFA" selected>FCFA</option>
+
                                               </select>
                                             </div>
                                         </div>
@@ -185,13 +148,14 @@
             </div>
             <!-- Intro Section -->
         </section>
-    {% endif %}#}
+    {% endif %}
 
     <main class="mx-5" style="margin-top:50px!important; ">
         <div class="container mb-4 bg-light">
             <div class="row justify-content-center mx-auto">
                 <div class="">
-                    <a  id="" class="btn btn-primary btn-md btn-rounded font-weight-bold" href="{{ path('findetat') }}" role="button">État du jour</a>
+                    <a  id="" class="btn btn-primary btn-md btn-rounded font-weight-bold" href="{{ path('findetat') }}" role="button">État Transfert et Retrait du jour</a>
+                    <a  id="" class="btn btn-secondary btn-md btn-rounded font-weight-bold" href="{{ path('app_dashboard_findcaisseetat') }}" role="button">Suivi Alimentation de la caisse</a>
                 </div>
             </div>
         </div>
@@ -211,71 +175,6 @@
                 </div>
             </div>
         </section>
-        {#        CLIENT        #}
-        {# <div class="row mb-5">
-            <div id="showcandispo" class="mx-auto text-center justify-content-center card-body card-body-cascade text-center table-responsive card" style="display:none">
-                <h4 class='mb-1'>Liste des clients</h4>
-                <table id="dtBasicExample" class="table align-center justify-content-center align-items-center">
-                    <thead>
-                        <tr>
-                            <th class="th-sm">Nom complet</th>
-                            <th class="th-sm">Pseudonyme</th>
-                            <th class="th-sm">N°tél</th>
-                            <th class="th-sm">Agence</th>
-                            <th class="th-sm">Solde</th>
-                            <th class="th-sm">Actions</th>
-                            <th class="th-sm">Opérations</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in clients %}
-                            <tr>
-                                <td>{{user.fullname}}</td>
-                                <td>{{user.useridentifier}}</td>
-                                <td>{{user.tel}}</td>
-                                <td>{{user.agency}}</td>
-                                <td>
-                                    {% if user.solde %}
-                                        {{user.solde}}
-                                    {% else %}
-                                        0
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <a class="btn btn-outline-warning btn-rounded btn-sm" href="{{ path('user_edit', {'id': user.id}) }}">Modif</a>
-                                    {{ include('user/_delete_form.html.twig') }}
-                                </td>
-                                <td class="container-sm">
-                                    <div class="d-flex">
-                                        <div class="col-md-12">
-                                            <a class="btn blue-gradient btn-rounded btn-sm font-weight-bold" href="{{ path('operation',{'id':user.id, 'type':user.type, 'transact': 'Achat' }) }}">Achat|Or</a>
-                                            <a class="btn blue-gradient btn-rounded btn-sm font-weight-bold" href="{{ path('operation',{'id':user.id, 'type':user.type, 'transact': 'Vente' }) }}">Vente|Or</a>
-                                        </div>
-                                    </div>
-                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <a class="btn blue-gradient btn-rounded btn-sm font-weight-bold text-center mx-auto" href="{{ path('operationlot',{'id':user.id, 'type':user.type, 'transact': 'Lot' }) }}">Lot|Or</a>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <a class="btn rgba-indigo-light btn-rounded btn-sm font-weight-bold" href="{{ path('operation', {'id':user.id, 'type':user.type, 'transact': 'Dépôt' }) }}">Dépôt</a>
-                                            <a class="btn rgba-indigo-light btn-rounded btn-sm font-weight-bold" href="{{ path('operation', {'id':user.id, 'type':user.type, 'transact': 'Rétrait' }) }}">Rétrait</a>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                             <a class="btn blue-gradient btn-rounded btn-sm font-weight-bold" href="{{ path('transfert',{'id':user.id,'cl':user.useridentifier}) }}">Transfert</a>
-                                            <a class="btn btn-warning btn-rounded btn-sm font-weight-bold" href="{{ path('user_show', {'id': user.id}) }}">Rapport</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div> #}
 
         {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SOUS_ADMIN') or is_granted('ROLE_CHECKER')  %}
             <div class="row mb-5">
@@ -442,6 +341,7 @@
 
                 return [year, month, day].join('-');
             }
+            $('#upcaisse').append($('#caisse_caisse').attr('hidden',false));
             $('#seletedCaisse').change(function(){
                 selected = $(this).val();
                 if(selected === "FCFA"){
@@ -451,25 +351,13 @@
                     $('#caisse_caisseStation').attr('hidden',true);
 
                 }
-                else if(selected === "$"){
-                    $('#upcaisse').append($('#caisse_dollar').attr('hidden',false));
-                    $('#caisse_caisse').attr('hidden',true);
-                    $('#caisse_euro').attr('hidden',true);
-                    $('#caisse_caisseStation').attr('hidden',true);
 
-                }
                 else if(selected === "€"){
                     $('#upcaisse').append($('#caisse_euro').attr('hidden',false));
                     $('#caisse_caisse').attr('hidden',true);
                     $('#caisse_dollar').attr('hidden',true);
                     $('#caisse_caisseStation').attr('hidden',true);
 
-                }
-                else if(selected === "caisseStation"){
-                    $('#upcaisse').append($('#caisse_caisseStation').attr('hidden',false));
-                    $('#caisse_caisse').attr('hidden',true);
-                    $('#caisse_dollar').attr('hidden',true);
-                    $('#caisse_euro').attr('hidden',true);
                 }
                 else {
                     return false;

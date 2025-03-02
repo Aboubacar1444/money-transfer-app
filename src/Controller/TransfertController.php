@@ -243,7 +243,7 @@ class TransfertController extends AbstractController
                 $fraisDevice = "FCFA";
                 $amountToPaidDevice ="YEN";
             }
-            elseif ($transferDestination == "MALI") {
+            elseif ($transferDestination == "MALI" || $transferDestination == "CI") {
                 $amountToPaid = sprintf('%.3f', $transfert->getMontant() * 8.60);
                 $device = "YEN";
                 $fraisDevice = "YEN";

@@ -132,12 +132,12 @@ class AgencyController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$agency->getId(), $request->request->get('_token'))) {
             $society=$societyRepository->findAll();
-            // foreach ($society as $s) {
-            //     $caisseg=$s->getCaisse();
-            //     $agencycaisse=$agency->getCaisse();
-            //     $caisseg+=$agencycaisse;
-            //     $s->setCaisse($caisseg);
-            // }
+             foreach ($society as $s) {
+                 $caisseg=$s->getCaisse();
+                 $agencycaisse=$agency->getCaisse();
+                 $caisseg-=$agencycaisse;
+                 $s->setCaisse($caisseg);
+             }
             $entityManager = $this->em;
             $entityManager->remove($agency);
             $entityManager->flush();

@@ -109,9 +109,7 @@ class DashboardController extends AbstractController
         if ($formcaisse->isSubmitted() && $formcaisse->isValid()) {
             foreach ($society as $k) {
                 $new=$formcaisse['caisse']->getData();
-                $dollar=$formcaisse['dollar']->getData();
-                $euro=$formcaisse['euro']->getData();
-                $caisseStation = $formcaisse['caisseStation']->getData();
+
                 $alimcaisse = new AlimentationCaisse();
                 if($new){
                     $caisse=$k->getCaisse();
@@ -126,46 +124,7 @@ class DashboardController extends AbstractController
                     }
 
                 }
-                if($dollar){
-                    $caisse=$k->getDollar();
-                    $caisse+=$dollar;
-                    $k->setDollar($caisse);
-                    $alimcaisse->setMontant($dollar);
-                    $alimcaisse->setType("Dollar");
-                    if ($request->get('date')) {
-                        $alimcaisse->setCreatedAt(new \DateTimeImmutable(date($request->get('date'))));
-                    }else {
-                        $alimcaisse->setCreatedAt(new \DateTimeImmutable(date('Y-m-d H:i:s')));
-                    }
 
-
-                }
-                if($euro){
-                    $caisse=$k->getEuro();
-                    $caisse+=$euro;
-                    $k->setEuro($caisse);
-                    $alimcaisse->setMontant($euro);
-                    $alimcaisse->setType("Euro");
-                    if ($request->get('date')) {
-                        $alimcaisse->setCreatedAt(new \DateTimeImmutable(date($request->get('date'))));
-                    }else {
-                        $alimcaisse->setCreatedAt(new \DateTimeImmutable(date('Y-m-d H:i:s')));
-                    }
-
-                }
-                if($caisseStation){
-                    $caisse=$k->getCaisseStation();
-                    $caisse+=$caisseStation;
-                    $k->setCaisseStation($caisse);
-                    $alimcaisse->setMontant($caisseStation);
-                    $alimcaisse->setType("Caisse Station FCFA");
-                    if ($request->get('date')) {
-                        $alimcaisse->setCreatedAt(new \DateTimeImmutable(date($request->get('date'))));
-                    }else {
-                        $alimcaisse->setCreatedAt(new \DateTimeImmutable(date('Y-m-d H:i:s')));
-                    }
-
-                }
             }
             $em->persist($alimcaisse);
             $em->flush();
@@ -321,7 +280,7 @@ class DashboardController extends AbstractController
 
 
     #[Route(path: '/daysoperations', name: 'findetat')]
-    public function FindEtat(Request $request, TransfertRepository $transfertRepository, AlimentationCaisseRepository $alimcaisse, SocietyRepository $societyRepository, UserRepository $userRepository): Response
+    public function FindTransfertEtat(Request $request, TransfertRepository $transfertRepository, AlimentationCaisseRepository $alimcaisse, SocietyRepository $societyRepository, UserRepository $userRepository): Response
     {
         $defaultDate =new \DateTimeImmutable();
         $date = $request->request->get('date') ?? $defaultDate->format('Y-m-d');
@@ -359,6 +318,22 @@ class DashboardController extends AbstractController
             'dayTotalMali' => $dayTotalMali,
             'dayTotalRetraitChina' => $dayTotalRetraitChina,
             'dayTotalRetraitMali' => $dayTotalRetraitMali,
+        ]);
+    }
+
+    #[Route(path: '/caisse-operations', name: 'app_dashboard_findcaisseetat')]
+    public function FindCaisseEtat(Request $request, TransfertRepository $transfertRepository, AlimentationCaisseRepository $alimcaisse, SocietyRepository $societyRepository, UserRepository $userRepository): Response
+    {
+        $defaultDate =new \DateTimeImmutable();
+        $date = $request->request->get('date') ?? $defaultDate->format('Y-m-d');
+
+        $society=$societyRepository->findAll();
+
+
+
+        return $this->render('dashboard/etatcaisse.html.twig',[
+            'society'=>$society,
+            'caisseEtat'=>$alimcaisse->findBy(['type'=>['FCFA', ]],['id'=>'DESC']),
         ]);
     }
 
