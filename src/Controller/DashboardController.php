@@ -326,7 +326,6 @@ class DashboardController extends AbstractController
     {
         $defaultDate =new \DateTimeImmutable();
         $date = $request->request->get('date') ?? $defaultDate->format('Y-m-d');
-
         $society=$societyRepository->findAll();
 
 
