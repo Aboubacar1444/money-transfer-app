@@ -179,9 +179,32 @@ class TransfertController extends AbstractController
     #[Route(path: '/sent/{id}', name: 'sent')]
     public function sent(Transfert $transfert, SocietyRepository $societyRepository): Response
     {
+        $transferDestination = $transfert->getTransagency()->getName();
+        if ( $transferDestination == "CHINE") {
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() / 8.60);
+            $device = "FCFA";
+            $fraisDevice = "FCFA";
+            $amountToPaidDevice ="YEN";
+        }
+        elseif ($transferDestination == "MALI" || $transferDestination == "CI") {
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() * 8.60);
+            $device = "YEN";
+            $fraisDevice = "YEN";
+            $amountToPaidDevice ="FCFA";
+        }
+        else {
+            $amountToPaid = $transfert->getMontant();
+            $device = "FCFA";
+            $fraisDevice = "FCFA";
+            $amountToPaidDevice ="FCFA";
+        }
         return $this->render('transfert/sent.html.twig', [
             'society'=>$societyRepository->findAll(),
             'transfert'=>$transfert,
+            'amountToPaid' => $amountToPaid,
+            'device' => $device,
+            'fraisDevice' => $fraisDevice,
+            'amountToPaidDevice' => $amountToPaidDevice,
         ]);
     }
 
@@ -280,9 +303,35 @@ class TransfertController extends AbstractController
             $this->addFlash("success", "Rétrait effectué avec succès.");
             return $this->redirectToRoute('receved',['id'=> $transfert->getId(), 'newamount'=>$newmontant],Response::HTTP_SEE_OTHER);
         }
+
+        $transferDestination = $transfert->getTransagency()->getName();
+
+        if ($transferDestination == "CHINE") {
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() / 8.60);
+            $device = "FCFA";
+            $fraisDevice = "FCFA";
+            $amountToPaidDevice ="YEN";
+        }
+        elseif ($transferDestination == "MALI" || $transferDestination == "CI") {
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() * 8.60);
+            $device = "YEN";
+            $fraisDevice = "YEN";
+            $amountToPaidDevice ="FCFA";
+        }
+        else {
+            $amountToPaid = $transfert->getMontant();
+            $device = "FCFA";
+            $fraisDevice = "FCFA";
+            $amountToPaidDevice ="FCFA";
+        }
+
         return $this->render('transfert/receve.html.twig', [
             'society'=>$societyRepository->findAll(),
             'transfert'=>$transfert,
+            'amountToPaid'=>$amountToPaid,
+            'device'=>$device,
+            'fraisDevice'=>$fraisDevice,
+            'amountToPaidDevice'=>$amountToPaidDevice,
         ]);
     }
 
@@ -290,10 +339,34 @@ class TransfertController extends AbstractController
     public function receved(Request $request, Transfert $transfert, SocietyRepository $societyRepository): Response
     {
         $newamount = $request->get('newamount') ? $request->get('newamount') : false;
+        $transferDestination = $transfert->getTransagency()->getName();
+        if ( $transferDestination == "CHINE") {
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() / 8.60);
+            $device = "FCFA";
+            $fraisDevice = "FCFA";
+            $amountToPaidDevice ="YEN";
+        }
+        elseif ($transferDestination == "MALI" || $transferDestination == "CI") {
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() * 8.60);
+            $device = "YEN";
+            $fraisDevice = "YEN";
+            $amountToPaidDevice ="FCFA";
+        }
+        else {
+            $amountToPaid = $transfert->getMontant();
+            $device = "FCFA";
+            $fraisDevice = "FCFA";
+            $amountToPaidDevice ="FCFA";
+        }
+
         return $this->render('transfert/receved.html.twig', [
             'society'=>$societyRepository->findAll(),
             'transfert'=>$transfert,
             'newamount'=>$newamount,
+            'amountToPaid'=>$amountToPaid,
+            'device'=>$device,
+            'fraisDevice'=>$fraisDevice,
+            'amountToPaidDevice'=>$amountToPaidDevice,
         ]);
     }
 

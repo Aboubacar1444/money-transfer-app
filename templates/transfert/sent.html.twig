@@ -50,8 +50,8 @@
             <div class="container mt-1">
                 <div class="row mx-auto">
                     <div class="col-md-8 mx-auto">
-                        <h3>Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> FCFA</h3>
-                        <h3>Frais: <span id="number" class="font-weight-bold"> {{ transfert.frais|number_format(0,' ',' ') }}</span> FCFA</h3>
+                        <h3>Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> {{ device}} </h3>
+                        <h3>Frais: <span id="number" class="font-weight-bold"> {{ transfert.frais|number_format(0,' ',' ') }}</span> {{ fraisDevice}} </h3>
                     </div>
                     {# <div class="col-md-8 mx-auto">
                         <h3>Code: <span id="" class="font-weight-bold"> {{ transfert.secretid }}</span></h3>
@@ -121,8 +121,8 @@
             <div class="container mt-1">
                 <div class="row  mx-auto">
                     <div class="col-md-8 mx-auto">
-                        <h3>Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> FCFA</h3>
-                        <h3>Frais: <span id="number" class="font-weight-bold"> {{ transfert.frais|number_format(0,' ',' ') }}</span> FCFA</h3>
+                        <h3>Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> {{ device}} </h3>
+                        <h3>Frais: <span id="number" class="font-weight-bold"> {{ transfert.frais|number_format(0,' ',' ') }}</span> {{ fraisDevice}} </h3>
                     </div>
                     {% if not is_granted("ROLE_AGENT") %}
                         <div class="col-md-8 mx-auto">
@@ -181,7 +181,7 @@
                 Print();
             });
 
-            $('.inletter').text('Arrêtée à la somme de: ' +NumberToLetter($('#number').text() )+' FCFA');
+            $('.inletter').text('Arrêtée à la somme de: ' +NumberToLetter($('#number').text() )+' {{ device }}');
 
         });
     </script>
