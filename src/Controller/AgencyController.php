@@ -138,8 +138,12 @@ class AgencyController extends AbstractController
                  $caisseg-=$agencycaisse;
                  $s->setCaisse($caisseg);
              }
+
             $entityManager = $this->em;
             $entityManager->remove($agency);
+            foreach ($agency->getUsers() as $u){
+                $u->setAgency(null);
+            }
             $entityManager->flush();
         }
         $this->addFlash("success", "Agence supprimée avec succès!");
