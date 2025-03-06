@@ -145,7 +145,7 @@ class AgencyController extends AbstractController
                 $u->setAgency(null);
             }
             foreach ($agency->getTransferts() as $u){
-                $u->setAgency(null);
+                $u->setTransagency(null);
             }
             $entityManager->flush();
         }
