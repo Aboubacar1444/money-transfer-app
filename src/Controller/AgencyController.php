@@ -144,6 +144,9 @@ class AgencyController extends AbstractController
             foreach ($agency->getUsers() as $u){
                 $u->setAgency(null);
             }
+            foreach ($agency->getTransferts() as $u){
+                $u->setAgency(null);
+            }
             $entityManager->flush();
         }
         $this->addFlash("success", "Agence supprimée avec succès!");
