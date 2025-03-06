@@ -136,51 +136,35 @@ class DashboardController extends AbstractController
         if ($this->isGranted("ROLE_ADMIN")) {
             $agents=$userRepository->findBy(
                 [
-                    'type'=>["Checker", "Headmaster", "Agent", "Administrateur", null],
+                    'type'=>["Checker", "Agent", "Administrateur", null],
                 ]
             );
-            $clients=$userRepository->findBy(
-                [
-                    'type'=>"Client"
-                ]
-            );
+
             $transfert=$transfertRepository->findAll();
         }
         elseif ($this->isGranted("ROLE_SOUS_ADMIN")) {
             $agents=$userRepository->findBy(
                 [
-                    'type'=>["Checker", "Headmaster", "Agent"],
+                    'type'=>["Checker",  "Agent"],
                 ]
             );
-            $clients=$userRepository->findBy(
-                [
-                    'type'=>"Client"
-                ]
-            );
+
             $transfert=$transfertRepository->findAll();
         }
         elseif ($this->isGranted("ROLE_CHECKER")) {
             $agents=$userRepository->findBy(
                 [
-                    'type'=>["Headmaster", "Agent"],
+                    'type'=> "Agent" ,
                 ]
             );
-            $clients=$userRepository->findBy(
-                [
-                    'type'=>"Client",
-                ]
-            );
+
             $transfert=$transfertRepository->findAll();
         }
         else{
             $agents=false;
         }
         if ($this->isGranted("ROLE_AGENT")) {
-            $clients=$userRepository->findBy(
-                [
-                    'type'=>"Client",
-                ]
-            );
+
             $transfert=$transfertRepository->findBy(
                 ['agency'=>$this->getUser()->getAgency()->getName()],
                 ['id'=>'DESC'],
@@ -268,7 +252,6 @@ class DashboardController extends AbstractController
                 'formclient' => $formclient->createView(),
                 'formpass' => $formpass->createView(),
                 'society' => $society,
-                'clients' => $clients,
                 'agents' => $agents,
                 'formcaisse' => $formcaisse->createView(),
                 'transferts' => $transfert,
