@@ -50,9 +50,9 @@
             <div class="container mt-2">
                 <div class="row mx-auto">
                     <div class="col-md-12 mx-auto justify-content-between">
-                        <h3>Montant Envoyé: <span class="font-weight-bold">{{ transfert.montant|number_format(0,' ',' ') }}  {{ device }} </span></h3>
-                        <h3>Frais: <span  class="font-weight-bold"> {{ transfert.frais|number_format(0,' ',' ') }} {{ fraisDevice}} </span></h3>
-                        <h3>Montant Reçu: <span id="number" class="font-weight-bold"> {{ amountToPaid|number_format(0,' ',' ') }} {{ amountToPaidDevice}} </span></h3>
+                        <h3>Montant Envoyé: <span class="font-weight-bold">{{ transfert.montant|number_format(0,' ',' ') }}</span>  <span class="font-weight-bold">{{ device }} </span></h3>
+                        <h3>Frais: <span  class="font-weight-bold"> {{ transfert.frais|number_format(0,' ',' ') }}</span> <span class="font-weight-bold">{{ fraisDevice}} </span></h3>
+                        <h3>Montant Reçu: <span id="number" class="font-weight-bold"> {{ amountToPaid|number_format(0,' ',' ') }}</span> <span class="font-weight-bold">{{ amountToPaidDevice}} </span></h3>
                     </div>
                     {# <div class="col-md-8 mx-auto">
                         <h3>Secret id: <span id="" class="font-weight-bold"> {{ transfert.secretid }}</span></h3>
@@ -122,9 +122,9 @@
             <div class="container mt-1">
                 <div class="row mx-auto">
                     <div class="col-md-12 mx-auto justify-content-between">
-                        <h3>Montant Envoyé: <span  class="font-weight-bold">{{ transfert.montant|number_format(0,' ',' ') }}  {{ device }} </span></h3>
-                        <h3>Frais: <span class="font-weight-bold"> {{ transfert.frais|number_format(0,' ',' ') }} {{ fraisDevice}} </span></h3>
-                        <h3>Montant Reçu: <span id="number" class="font-weight-bold"> {{ amountToPaid|number_format(0,' ',' ') }} {{ amountToPaidDevice}} </span></h3>
+                        <h3>Montant Envoyé: <span  class="font-weight-bold">{{ transfert.montant|number_format(0,' ',' ') }}</span> <span class="font-weight-bold"> {{ device }} </span></h3>
+                        <h3>Frais: <span class="font-weight-bold"> {{ transfert.frais|number_format(0,' ',' ') }}</span><span class="font-weight-bold"> {{ fraisDevice}} </span></h3>
+                        <h3>Montant Reçu: <span id="number" class="font-weight-bold"> {{ amountToPaid|number_format(0,' ',' ') }}</span> <span class="font-weight-bold"> {{ amountToPaidDevice}} </span></h3>
                     </div>
 
                     <div class="col-md-12 mx-auto">
