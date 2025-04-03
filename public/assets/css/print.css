@@ -1,7 +1,45 @@
-header, footer, aside, nav, form, iframe, .menu, .hero, .adslot, .btn, .alert {
-  display: none!important;
-}
-.container, .row, .table{
-    margin:0!important;
-    padding:0!important;
+@media print {
+    body {
+        font-size: 10px;
+        margin: 0;
+        padding: 0;
+    }
+
+    img {
+        max-width: 40px !important;
+        height: auto;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 5px;
+    }
+
+    h1, h3, h5 {
+        font-size: 12px;
+        margin: 2px 0;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    .col-md-6, .col-md-12, .col-md-8, .col-md-4 {
+        flex: 1;
+        padding: 2px;
+    }
+
+    hr {
+        margin: 3px 0;
+    }
+
+    .border {
+        border-width: 1px !important;
+    }
+
+    /* Empêcher les coupures entre les reçus */
+    .container, .row {
+        page-break-inside: avoid;
+    }
 }

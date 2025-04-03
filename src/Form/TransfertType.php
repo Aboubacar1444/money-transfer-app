@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Agency;
 use App\Entity\Transfert;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -14,6 +16,7 @@ class TransfertType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $userAgency = $options['userAgency']; // L'agence de l'utilisateur connecté
         $builder
             ->add('montant', NumberType::class,[
                 'label'=>false,
@@ -60,10 +63,22 @@ class TransfertType extends AbstractType
                 ]
             ])
             ->add('transagency', EntityType::class,[
-                'class'=>"App\Entity\Agency",
+                'class' => Agency::class,
+                'query_builder' => function (EntityRepository $er) use ($userAgency) {
+                    $qb = $er->createQueryBuilder('a');
+                    if ($userAgency) {
+                        $qb->where('a.id != :userAgency')
+                            ->setParameter('userAgency', $userAgency->getId());
+                    }
+                    return $qb;
+                },
                 'required'=>true,
-                'attr'=>[
-                    'class'=>"md-form"
+                'attr' => [
+                    'class' => "custom-select form-select",
+                    'data-live-search' => "true",
+                    'data-size' => "sm",
+                    'data-width' => "80%",
+                    'data-show-label' => "false"
                 ],
                 'placeholder'=>"Choisissez l'agence de réception",
                 'label'=>false,
@@ -75,6 +90,7 @@ class TransfertType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Transfert::class,
+            'userAgency' => null, // Nouvelle option pour filtrer l'agence de l'utilisateur connecté
         ]);
     }
 }

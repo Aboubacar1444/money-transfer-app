@@ -47,7 +47,9 @@ class TransfertController extends AbstractController
 
         $transfert = new Transfert();
         if ($request->get('id') && $request->get('cl')) {
-            $form = $this->createForm(TransfertcType::class, $transfert);
+            $form = $this->createForm(TransfertcType::class, $transfert, [
+                'userAgency' => $this->getUser()->getAgency(), // Passe l'agence de l'utilisateur
+            ]);
             $client=$userRepository->findOneBy(['id'=>$request->get('id'), 'username'=>$request->get('cl')]);
             $clientcaisse=$client->getSolde();
         }
@@ -55,7 +57,9 @@ class TransfertController extends AbstractController
         elseif (!$request->get('id') && !$request->get('cl')) {
             $client=false;
             $clientcaisse=false;
-            $form = $this->createForm(TransfertType::class, $transfert);
+            $form = $this->createForm(TransfertType::class, $transfert, [
+                'userAgency' => $this->getUser()->getAgency(), // Passe l'agence de l'utilisateur
+            ]);
         }
         else{
             $this->addFlash("error", "Attention ce client n'existe pas!");
@@ -64,16 +68,18 @@ class TransfertController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $agencySetByAdmin = $request->request->get('agencySetByAdmin');
+
             $secretCodeId = generateCode(10);
             if ($this->getUser()->getAgency()) {
                 $agencysender=$agencyRepository->findOneBy(['name'=>$this->getUser()->getAgency()->getName()]);
             }else{
-                $agencysender=false;
+                $agencysender = $agencyRepository->find($agencySetByAdmin) ?? false;
             }
 
 
-            if($this->getUser()->getAgency()) {
-                $agency=$this->getUser()->getAgency()->getName();
+            if($this->getUser()->getAgency() || $agencysender) {
+                $agency=$this->getUser()->getAgency()?->getName() ?? $agencysender->getName();
                 $transagency=$agencysender->getCaisse();
                 $transagency+=$transfert->getMontant();
                 $agencysender->setCaisse($transagency);
@@ -172,6 +178,7 @@ class TransfertController extends AbstractController
             }
         return $this->render('transfert/index.html.twig', [
             'society' => $societyRepository->findAll(),
+            'agencies' => $agencyRepository->findAll(),
             'form' => $form->createView(),
 
         ]);

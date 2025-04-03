@@ -50,18 +50,23 @@
                             <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="status" value="NON" />
                             <label class="form-check-label" for="inlineCheckbox1" id="f">Frais payés à la réception.(par défaut)</label>
                         </div>
-                        <div class="mx-auto col-lg-4 col-md-6 md-form">
-                            {{ form_row(form.transagency, {
-                                'attr':{
-                                    'data-live-search':"true",
-                                    'data-size':"sm",
-                                    'data-width':"80%",
-                                    'data-show-label':"false",
-                                    'class':'custom-select form-select'
-                                }
-                            }) }}
+                        {% if not app.user.agency %}
+                            <div class="justify-content-center align-items-center col-lg-6 col-md-6 md-form">
+                                <select name="agencySetByAdmin" id="agencySetByAdmin" class="form-control md-form form-select">
+                                    <option disabled selected>Selectionnez l'agence d'envoi</option>
+                                    {% for agency in agencies %}
+                                    <option value="{{ agency.id }}" class="form-control form-select">{{ agency.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <h4 style="display:none;" id="showAgencySeyByAdmin">Solde: <span id="caisseAgencySetByAdmin" class="font-weight-bold"> </span> FCFA</h4>
+                            </div>
+                        {% endif %}
+
+                        <div class="justify-content-center align-items-center col-lg-6 col-md-6 md-form">
+                            {{ form_row(form.transagency) }}
                             <h4 style="display:none;" id="show">Solde: <span id="caisse" class="font-weight-bold"> </span> FCFA</h4>
                         </div>
+
                     </div>
                 </div>
                 <div class="row">
@@ -99,7 +104,7 @@
                 return [year, month, day].join('-');
             }
 
-            function getSolde(agency){
+            function getSolde(agency, $type){
               $.ajax({
                 method: 'GET',
                 url: '{{path("getagency", {"id":'+'})}}'+agency,
@@ -107,10 +112,15 @@
                 dataType: 'json',
                 success: function(response){
                     //console.log(response);
-                    if(response)
+                    if(response && $type == "recepAgency" )
                     {
                         $('#caisse').html(response);
                         $('#show').css('display','');
+                    }
+                    if(response && $type == "sendAgency" )
+                    {
+                        $('#caisseAgencySetByAdmin').html(response);
+                        $('#showAgencySeyByAdmin').css('display','');
                     }
                 },
                 error: function(error)
@@ -122,8 +132,14 @@
            }
            $('#transfertc_transagency, #transfert_transagency').change(function(){
                var agency = $(this).val();
-               getSolde(agency);
+               getSolde(agency, "recepAgency");
            });
+            $('#agencySetByAdmin').change(function () {
+                let agency = $(this).val();
+                getSolde(agency, "sendAgency")
+            });
+
+
 
         })
     </script>
