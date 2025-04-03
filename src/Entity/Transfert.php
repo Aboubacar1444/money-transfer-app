@@ -64,6 +64,9 @@ class Transfert
     #[ORM\Column(nullable: true)]
     private ?float $amountToPaid = null;
 
+    #[ORM\Column]
+    private ?float $taux = null;
+
 
 
     public function setId(int $id): static
@@ -284,6 +287,18 @@ class Transfert
     public function setAmountToPaid(?float $amountToPaid): static
     {
         $this->amountToPaid = $amountToPaid;
+
+        return $this;
+    }
+
+    public function getTaux(): ?float
+    {
+        return $this->taux;
+    }
+
+    public function setTaux(float $taux): static
+    {
+        $this->taux = $taux;
 
         return $this;
     }

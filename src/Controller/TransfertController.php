@@ -69,8 +69,10 @@ class TransfertController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $agencySetByAdmin = $request->request->get('agencySetByAdmin');
-
+            $tauxEchange = (float) $request->request->get('tauxEchange');
+            $transfert->setTaux($tauxEchange);
             $secretCodeId = generateCode(10);
+
             if ($this->getUser()->getAgency()) {
                 $agencysender=$agencyRepository->findOneBy(['name'=>$this->getUser()->getAgency()->getName()]);
             }else{
@@ -121,13 +123,13 @@ class TransfertController extends AbstractController
 
             $transferDestination = $transfert->getTransagency()->getName();
             if ($transferDestination == "CHINE") {
-                $amountToPaid = sprintf('%.3f', $transfert->getMontant() / 8.60);
+                $amountToPaid = sprintf('%.3f', $transfert->getMontant() / $tauxEchange);
                 $device = "FCFA";
                 $fraisDevice = "FCFA";
                 $amountToPaidDevice ="YEN";
             }
             elseif ($transferDestination == "MALI") {
-                $amountToPaid = sprintf('%.3f', $transfert->getMontant() * 8.60);
+                $amountToPaid = sprintf('%.3f', $transfert->getMontant() * $tauxEchange);
                 $device = "YEN";
                 $fraisDevice = "YEN";
                 $amountToPaidDevice ="FCFA";
@@ -188,13 +190,13 @@ class TransfertController extends AbstractController
     {
         $transferDestination = $transfert->getTransagency()->getName();
         if ( $transferDestination == "CHINE") {
-            $amountToPaid = sprintf('%.3f', $transfert->getMontant() / 8.60);
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() / $transfert->getTaux());
             $device = "FCFA";
             $fraisDevice = "FCFA";
             $amountToPaidDevice ="YEN";
         }
         elseif ($transferDestination == "MALI" || $transferDestination == "CI") {
-            $amountToPaid = sprintf('%.3f', $transfert->getMontant() * 8.60);
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() * $transfert->getTaux());
             $device = "YEN";
             $fraisDevice = "YEN";
             $amountToPaidDevice ="FCFA";
@@ -348,13 +350,13 @@ class TransfertController extends AbstractController
         $newamount = $request->get('newamount') ? $request->get('newamount') : false;
         $transferDestination = $transfert->getTransagency()->getName();
         if ( $transferDestination == "CHINE") {
-            $amountToPaid = sprintf('%.3f', $transfert->getMontant() / 8.60);
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() / $transfert->getTaux());
             $device = "FCFA";
             $fraisDevice = "FCFA";
             $amountToPaidDevice ="YEN";
         }
         elseif ($transferDestination == "MALI" || $transferDestination == "CI") {
-            $amountToPaid = sprintf('%.3f', $transfert->getMontant() * 8.60);
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() * $transfert->getTaux());
             $device = "YEN";
             $fraisDevice = "YEN";
             $amountToPaidDevice ="FCFA";
