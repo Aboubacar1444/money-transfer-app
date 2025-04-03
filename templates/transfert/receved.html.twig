@@ -34,7 +34,15 @@
                 </div>
             {% endfor %}
             <div class="row mask aqua-gradient-rgba">
-                <h1 class="mx-auto font-weight-bold white-text">Rétrait d'argent N° {{transfert.id}}</h1>
+                <h1 class="mx-auto font-weight-bold white-text">
+                    {% if transfert.agency == "MALI" %}
+                        Transfert d'argent N° 00223 - {{transfert.id|strPad(4,'0')}}
+                    {%elseif transfert.agency == "CI"  %}
+                        Transfert d'argent N° 00225 - {{transfert.id|strPad(4,'0')}}
+                    {%elseif transfert.agency == "CHINE"  %}
+                        Transfert d'argent N° 0086 - {{transfert.id|strPad(4,'0')}}
+                    {% endif %}
+                </h1>
             </div>
             <div class="row mask mb-1">
                 <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-6"> <u>Expéditeur</u>: {{ transfert.destinateur }}</h3>
@@ -106,7 +114,15 @@
                 </div>
             {% endfor %}
             <div class="row mask aqua-gradient-rgba">
-                <h1 class="mx-auto font-weight-bold white-text">Rétrait d'argent N° {{transfert.id}}</h1>
+                <h1 class="mx-auto font-weight-bold white-text">
+                    {% if transfert.agency == "MALI" %}
+                        Transfert d'argent N° 00223 - {{transfert.id|strPad(4,'0')}}
+                    {%elseif transfert.agency == "CI"  %}
+                        Transfert d'argent N° 00225 - {{transfert.id|strPad(4,'0')}}
+                    {%elseif transfert.agency == "CHINE"  %}
+                        Transfert d'argent N° 0086 - {{transfert.id|strPad(4,'0')}}
+                    {% endif %}
+                </h1>
             </div>
             <div class="row mask mb-1">
                 <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-6"> <u>Expéditeur</u>: {{ transfert.destinateur }}</h3>
