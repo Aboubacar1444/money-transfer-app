@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 {% block print %}
-    <link rel="stylesheet" media="print" href="{{ asset('./assets/css/print.css') }}" />
+    <link rel="stylesheet" media="print" href="{{ asset('/assets/css/print.css') }}" />
 {% endblock %}
 {% block body %}
     {% if transfert.client %}
@@ -58,8 +58,8 @@
             </div>
             <div class="container mt-1">
                 <div class="row mx-auto">
-                    <div class="col-md-8 mx-auto">
-                        <h3>Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> {{ device}} </h3>
+                    <div class="col-8 mx-auto">
+                        <h3 class="col-6">Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> {{ device}} </h3>
                     </div>
                     {# <div class="col-md-8 mx-auto">
                         <h3>Secret id: <span id="" class="font-weight-bold"> {{ transfert.secretid }}</span></h3>
@@ -143,8 +143,8 @@
             </div>
             <div class="container mt-1">
                 <div class="row mx-auto">
-                    <div class="col-md-8 mx-auto">
-                        <h3>Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> {{ device}} </h3>
+                    <div class="col-8 mx-auto">
+                        <h3 class="col-6">Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> {{ device}} </h3>
                     </div>
                     {# <div class="col-md-8 mx-auto">
                         <h3>Secret id: <span id="" class="font-weight-bold"> {{ transfert.secretid }}</span></h3>
