@@ -23,7 +23,8 @@ class TransfertType extends AbstractType
                 'attr'=>[
                     'placeholder'=>'Montant à envoyé',
                     'class'=>'',
-                ]
+                ],
+                
             ])
             ->add('frais', NumberType::class,[
                 'label'=>false,

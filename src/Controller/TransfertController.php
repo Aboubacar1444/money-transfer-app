@@ -20,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+
 /**
  * @IsGranted("ROLE_USER")
  */
@@ -32,6 +33,7 @@ class TransfertController extends AbstractController
     {
         $this->whatsAppService = $whatsAppService;
     }
+
 
     #[Route(path: '/new', name: 'transfert')]
     public function index(Request $request, AgencyRepository $agencyRepository, SocietyRepository $societyRepository, UserRepository $userRepository): Response
@@ -69,7 +71,7 @@ class TransfertController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $agencySetByAdmin = $request->request->get('agencySetByAdmin');
-            $tauxEchange = (float) $request->request->get('tauxEchange');
+            $tauxEchange = (float) $request->request->get('tauxEchange') ?? 1;
             $transfert->setTaux($tauxEchange);
             $secretCodeId = generateCode(10);
 
@@ -146,11 +148,11 @@ class TransfertController extends AbstractController
                 "Total:". "`{$transfert->getMontant()}`"." $device. \n".
                 "Frais: "."`{$transfert->getFrais()}`"." $fraisDevice. \n".
 //                    "Frais payé: "."`{$transfert->getPaid()}`".". \n".
-                "Montant à payer: "."`$amountToPaid`"." $amountToPaidDevice. \n".
+                "Montant à recevoir: "."`$amountToPaid`"." $amountToPaidDevice. \n".
                 "A : `{$transfert->getDestinataire()}` \n".
 
                 "Bien à vous "."`{$transfert->getDestinateur()}`".
-                ".\nTRAORE - SERVICE";
+                ".\nMONEY - SERVICE";
 
             $bodyDestinataire = "Transfert d'argent -> `$transferDestination`. \n".
                 "Total: "."`{$transfert->getMontant()}`"." $device. \n".
@@ -159,12 +161,12 @@ class TransfertController extends AbstractController
                 "Montant à payer: "."`$amountToPaid`"." $amountToPaidDevice. \n".
                 "Code de retrait: `$secretCodeId`. \n".
                 "Bien à vous "."`{$transfert->getDestinataire()}`".
-                ".\nTRAORE - SERVICE";
+                ".\nMONEY - SERVICE";
+            // ULTRA MSG OPTION
+            $this->whatsAppService->sendMessage($transfert->getTelsender(), $bodyDestinateur, "MONEY SERVICE");
+            $this->whatsAppService->sendMessage($transfert->getTel(), $bodyDestinataire, "MONEY SERVICE");
 
-            $this->whatsAppService->sendMessage($transfert->getTelsender(), $bodyDestinateur, "TRAORE SERVICE");
-            $this->whatsAppService->sendMessage($transfert->getTel(), $bodyDestinataire, "TRAORE SERVICE");
-
-                $transfert->setAgent($this->getUser()->getFullname());
+            $transfert->setAgent($this->getUser()->getFullname());
                 $transfert->setSecretid($secretCodeId);
                 $transfert->setSentAt(new \DateTimeImmutable());
                 $transfert->setTransagency($transfert->getTransagency());
@@ -270,13 +272,13 @@ class TransfertController extends AbstractController
             $transferDestination = $transfert->getTransagency()->getName();
 
             if ($transferDestination == "CHINE") {
-                $amountToPaid = sprintf('%.3f', $transfert->getMontant() / 8.60);
+                $amountToPaid = sprintf('%.3f', $transfert->getMontant() / $transfert->getTaux());
                 $device = "FCFA";
                 $fraisDevice = "FCFA";
                 $amountToPaidDevice ="YEN";
             }
             elseif ($transferDestination == "MALI" || $transferDestination == "CI") {
-                $amountToPaid = sprintf('%.3f', $transfert->getMontant() * 8.60);
+                $amountToPaid = sprintf('%.3f', $transfert->getMontant() * $transfert->getTaux());
                 $device = "YEN";
                 $fraisDevice = "YEN";
                 $amountToPaidDevice ="FCFA";
@@ -316,13 +318,13 @@ class TransfertController extends AbstractController
         $transferDestination = $transfert->getTransagency()->getName();
 
         if ($transferDestination == "CHINE") {
-            $amountToPaid = sprintf('%.3f', $transfert->getMontant() / 8.60);
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() / $transfert->getTaux());
             $device = "FCFA";
             $fraisDevice = "FCFA";
             $amountToPaidDevice ="YEN";
         }
         elseif ($transferDestination == "MALI" || $transferDestination == "CI") {
-            $amountToPaid = sprintf('%.3f', $transfert->getMontant() * 8.60);
+            $amountToPaid = sprintf('%.3f', $transfert->getMontant() * $transfert->getTaux());
             $device = "YEN";
             $fraisDevice = "YEN";
             $amountToPaidDevice ="FCFA";

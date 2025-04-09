@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Agency;
 use App\Entity\Transfert;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -23,12 +24,20 @@ class TransfertRepository extends ServiceEntityRepository
     //  * @return Transfert[] Returns an array of Transfert objects
     //  */
     /* */
-    public function findByDate($value)
+    public function findByDateOrAgency($date, Agency $agency = null)
     {
-        return $this->createQueryBuilder('t')
+        $qb =  $this->createQueryBuilder('t')
             ->andWhere('t.sentAt LIKE :val')
-            ->setParameter('val',"%". $value ."%")
-            ->orderBy('t.id', 'DESC')
+            ->setParameter('val',"%". $date ."%");
+        if ($agency != null){
+            $qb->andWhere('t.agency LIKE :agency')
+                ->orWhere('t.transagency = :transagency')
+                ->setParameter('agency',"%". $agency->getName() ."%")
+                ->setParameter('transagency', $agency);
+
+        }
+
+           return $qb->orderBy('t.id', 'DESC')
             ->getQuery()
             ->getResult()
         ;

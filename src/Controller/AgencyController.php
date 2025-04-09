@@ -115,6 +115,7 @@ class AgencyController extends AbstractController
             //     }
 
             // }
+            $agency->setCaisse($agencycaisse);
             $this->em->flush();
             $this->addFlash("success", "Agence modifiée avec succès!");
             return $this->redirectToRoute('agency_index', [], Response::HTTP_SEE_OTHER);

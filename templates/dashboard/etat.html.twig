@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block print %}
-    <link rel="stylesheet" media="print" href="{{ asset('./assets/css/print.css') }}" />
+    <link rel="stylesheet" media="print" href="{{ asset('/assets/css/print.css') }}" />
 {% endblock %}
 {% block body %}
-    <div class="container  text-bold text-center mt-5">
+    <div class="container-fluid  text-bold text-center mt-5">
         {% for society in society %}
-            <div class="row mask justify-content-center">
+            <div class="row mask justify-content-center align-items-center mx-auto">
                 {% if society.logo %}
                 <div class="col-md-12 mb-5">
                     <div class="justify-content-center align-items-center mx-auto my-auto text-center">
@@ -28,21 +28,25 @@
             </div>
         {% endfor %}
         <hr>
-        <div class="row">
+        <div class="row mx-auto justify-content-center align-items-center">
 
-            <div class="mx-auto">
-
-                <table class="table table-bordered">
-                    <form action="{{ path('findetat') }}" method="POST" class="form form-control form-inline row">
-                        <div class="row mx-auto">
-                            <div class="col-md-6 mx-auto">
-                                <input type="date" name="date" id="date" class="form-control custom-control-inline date" placeholder="date" required aria-required="true">
-                                <Button type="submit" name="submit" class="form-control custom-control-inline btn btn-primary text-center mx-auto rounded my-auto py-2 justify-content-center align-items-center">Filtrer</Button>
-                            </div>
-                            <div class="">
-                            </div>
+            <div class="justify-content-center align-items-center">
+                <form action="{{ path('findetat') }}" method="POST" class="">
+                    <div class="row mx-auto">
+                        <div class="col-md-6 mx-auto">
+                            <input type="date" name="date" id="date" class="form-control custom-control-inline date" placeholder="date" required >
+                            <select name="agency" id="agency" class="form-control my-2">
+                                <option selected disabled>Selectionnez une Agence</option>
+                                {% for agency in agencies  %}
+                                    <option value="{{ agency.id }}">{{ agency.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <Button type="submit" name="submit" class="form-control custom-control-inline btn btn-primary text-center mx-auto rounded my-auto py-2 justify-content-center align-items-center">Filtrer</Button>
                         </div>
-                    </form>
+                    </div>
+                </form>
+                <table id="dt" class="table table-bordered col-md-12 align-items-center justify-content-center mx-auto">
+
                     <hr>
                     <h2 class="text-smaller font-weight-bold text-small small-10"><u>Etat du jour: {{date|date('d - m - Y')}}</u></h2>
                     <thead>
@@ -55,7 +59,8 @@
                             <th class="text-monospace font-weight-bold" style="font-size:19px">Agence de dépôt</th>
                             <th class="text-monospace font-weight-bold" style="font-size:19px">Agence de retrait</th>
                             <th class="text-monospace font-weight-bold" style="font-size:19px">Montant</th>
-                            <th class="text-monospace font-weight-bold" style="font-size:19px">frais</th>
+                            <th class="text-monospace font-weight-bold" style="font-size:19px">Frais</th>
+                            <th class="text-monospace font-weight-bold" style="font-size:19px">Taux</th>
                             <th class="text-monospace font-weight-bold" style="font-size:19px">Date dépôt</th>
                             <th class="text-monospace font-weight-bold" style="font-size:19px">Date rétrait</th>
                             <th class="text-monospace font-weight-bold" style="font-size:19px">Status</th>
@@ -91,6 +96,8 @@
                             {% else %}
                                 <td class="text-monospace" style="font-size:14px;">-/-</td>
                             {% endif %}
+                            <td class="text-monospace" style="font-size:14px;">{{transfert.taux}}</td>
+
                             <td class="text-monospace" style="font-size:14px;">{{transfert.sentAt|date('d-m-Y H:i:s')}}</td>
                             {% if transfert.receveAt %}
                                 <td class="text-monospace" style="font-size:14px;">{{transfert.receveAt|date('d-m-Y H:i:s')}}</td>
@@ -111,17 +118,22 @@
                     </tbody>
                     <tfoot style="margin-top:10px;">
                         <tr>
-                            <td colspan='12' class="font-weight-bold" style="font-size:14px;"><u>Solde Total Transfert Chine du jour</u>: <span id="number">{{dayTotalChina|number_format(0,' ',' ')}}</span> FCFA</td>
+                            <td colspan='13' class="font-weight-bold text-decoration-underline" style="font-size:14px;"><u>Solde Total Transfert</u>
+                                <br>
+                                CHINA: <span id="number" class="px-3">{{dayTotalChina|number_format(0,' ',' ')}}</span> {{ deviceChina }}
+                                <br/>
+                                AFRICA: <span id="number" class="px-3">{{dayTotalAfrica|number_format(0,' ',' ')}}</span> {{ deviceAfrica }}
+                            </td>
                         </tr>
                         <tr>
-                            <td colspan='12' class="font-weight-bold" style="font-size:14px;"><u>Solde Total Transfert Mali du jour</u>: <span id="number">{{dayTotalMali|number_format(0,' ',' ')}}</span> FCFA</td>
+                            <td colspan='13' class="font-weight-bold" style="font-size:14px;"><u>Solde Total Retrait</u>:
+                                <br>
+                               CHINA: <span id="number" class="px-3">{{dayTotalRetraitChina|number_format(0,' ',' ')}}</span> {{ deviceChina }}
+                                <br>
+                               AFRICA: <span id="number" class="px-3">{{dayTotalRetraitAfrica|number_format(0,' ',' ')}}</span> {{ deviceAfrica }}
+                            </td>
                         </tr>
-                        <tr>
-                           <td colspan='12' class="font-weight-bold" style="font-size:14px;"><u>Solde Total Retrait Chine du jour</u>: <span id="number">{{dayTotalRetraitChina|number_format(0,' ',' ')}}</span> FCFA</td>
-                        </tr>
-                        <tr>
-                           <td colspan='12' class="font-weight-bold" style="font-size:14px;"><u>Solde Total Retrait Mali Frais du jour</u>: <span id="number">{{dayTotalRetraitMali|number_format(0,' ',' ')}}</span> FCFA</td>
-                        </tr>
+
 {#                        <tr>#}
 {#                            {% for society in society %}#}
 {#                                <td colspan='12' class="font-weight-bold" style="font-size:14px;"><u>Arrêté à la somme de</u>: <span id="" class="inletter font-weight-bold"></span></td>#}

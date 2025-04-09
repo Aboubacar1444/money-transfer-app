@@ -10,6 +10,7 @@ use App\Form\ClientType;
 use App\Form\PassType;
 use App\Form\User1Type;
 use App\Form\UserType;
+use App\Repository\AgencyRepository;
 use App\Repository\AlimentationCaisseRepository;
 use App\Repository\OperationsRepository;
 use App\Repository\SocietyRepository;
@@ -39,7 +40,7 @@ class DashboardController extends AbstractController
     }
 
     #[Route(path: '/', name: 'dashboard')]
-    public function index(Request $request, TransfertRepository $transfertRepository,  TokenStorageInterface $tokenStorageInterface, UserPasswordHasherInterface $passwordEncoder, SocietyRepository $societyRepository, UserRepository $userRepository): Response
+    public function index(Request $request, AgencyRepository $agencyRepository, TransfertRepository $transfertRepository,  TokenStorageInterface $tokenStorageInterface, UserPasswordHasherInterface $passwordEncoder, SocietyRepository $societyRepository, UserRepository $userRepository): Response
     {
         $em= $this->managerRegistry->getManager();
         $user = new User();
@@ -248,59 +249,71 @@ class DashboardController extends AbstractController
 
 
         return $this->render('dashboard/index.html.twig', [
-                'form' => $form->createView(),
-                'formclient' => $formclient->createView(),
-                'formpass' => $formpass->createView(),
-                'society' => $society,
-                'agents' => $agents,
-                'formcaisse' => $formcaisse->createView(),
-                'transferts' => $transfert,
-
-            ]);
+            'form' => $form->createView(),
+            'formclient' => $formclient->createView(),
+            'formpass' => $formpass->createView(),
+            'society' => $society,
+            'agents' => $agents,
+            'formcaisse' => $formcaisse->createView(),
+            'transferts' => $transfert,
+            'agencies' => $agencyRepository->findAll()
+        ]);
 
     }
 
 
 
     #[Route(path: '/daysoperations', name: 'findetat')]
-    public function FindTransfertEtat(Request $request, TransfertRepository $transfertRepository, AlimentationCaisseRepository $alimcaisse, SocietyRepository $societyRepository, UserRepository $userRepository): Response
+    public function FindTransfertEtat(Request $request, AgencyRepository $agencyRepository, TransfertRepository $transfertRepository, AlimentationCaisseRepository $alimcaisse, SocietyRepository $societyRepository, UserRepository $userRepository): Response
     {
         $defaultDate =new \DateTimeImmutable();
         $date = $request->request->get('date') ?? $defaultDate->format('Y-m-d');
-
+        $agency = $request->request->get('agency') ?? null;
         $society=$societyRepository->findAll();
-        $operations=$transfertRepository->findByDate($date);
-        $dayTotal = 0;
+        $agencies = $agencyRepository->findAll();
+        $operations=$transfertRepository->findByDateOrAgency($date, $agency ? $agencyRepository->find($agency) : null);
         $dayTotalChina = 0;
-        $dayTotalMali = 0;
-        $dayTotalRetrait = 0;
+        $dayTotalAfrica = 0;
         $dayTotalRetraitChina = 0;
-        $dayTotalRetraitMali = 0;
-//        $dayTotalRetraitFrais = 0;
+        $dayTotalRetraitAfrica = 0;
+
+        $deviceChine = "YEN";
+        $deviceAfrica = "FCFA";
 
         foreach ($operations as $transfert) {
-            $dayTotal += $transfert->getMontant();
+
             if ($transfert->getReceveAt()) {
-                $dayTotalRetrait += $transfert->getMontant();
+                if ($transfert->getTransagency()->getName() == "CHINE") {
+                    $dayTotalRetraitChina += $transfert->getMontant();
+                }
+                else {
+                    $dayTotalRetraitAfrica += $transfert->getMontant();
+                }
+
             }
-            if ($transfert->getTransagency()->getName() == "CHINE"){
-                $dayTotalChina = $dayTotal / 8.60;
-                $dayTotalRetraitChina = $dayTotalRetrait / 8.60;
-            }else{
-                $dayTotalMali=$dayTotal * 8.60;
-                $dayTotalRetraitMali = $dayTotalRetrait * 8.60;
+            if ($transfert->getAgency() == "CHINE") {
+                $dayTotalChina += $transfert->getMontant();
             }
+            else {
+                $dayTotalAfrica += $transfert->getMontant();
+            }
+
+
 
         }
 
         return $this->render('dashboard/etat.html.twig',[
-            'operations'=>$operations,
-            'society'=>$society,
+            'operations'=> $operations,
+            'society'=> $society,
+            'agencies' => $agencies,
             'date' => $date,
             'dayTotalChina' => $dayTotalChina,
-            'dayTotalMali' => $dayTotalMali,
+            'dayTotalAfrica' => $dayTotalAfrica,
             'dayTotalRetraitChina' => $dayTotalRetraitChina,
-            'dayTotalRetraitMali' => $dayTotalRetraitMali,
+            'dayTotalRetraitAfrica' => $dayTotalRetraitAfrica,
+            'deviceChina' => $deviceChine,
+
+            'deviceAfrica' => $deviceAfrica,
         ]);
     }
 
