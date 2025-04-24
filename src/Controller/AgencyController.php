@@ -14,8 +14,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/agency')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 class AgencyController extends AbstractController
 {
     public function __construct (private EntityManagerInterface $em){}
@@ -58,7 +60,7 @@ class AgencyController extends AbstractController
     }
 
     #[Route(path: '/new', name: 'agency_new', methods: ['GET', 'POST'])]
-    public function new(SocietyRepository $societyRepository,Request $request): Response
+    public function new(SocietyRepository $societyRepository, AgencyRepository $agencyRepository, Request $request): Response
     {
         $agency = new Agency();
         $form = $this->createForm(Agency1Type::class, $agency);
@@ -66,6 +68,10 @@ class AgencyController extends AbstractController
         $society=$societyRepository->findAll();
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->em;
+            if ($agencyRepository->count([]) <= 3) {
+                $this->addFlash('success', "Vous ne pouvez pas ajouter plus de trois agences.");
+                return $this->redirectToRoute('dashboard');
+            }
             foreach ($society as $s) {
                $caisseg=$s->getCaisse();
                $agencycaisse=$agency->getCaisse();

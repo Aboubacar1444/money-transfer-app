@@ -284,23 +284,39 @@
                                 <td class="th-sm">-/-</td>
                             {% endif %}
                             <td class="th-sm">{{transfert.sentAt|date('d-m-Y H:i:s')}}</td>
-                            {% if transfert.receveAt %}
-                                <td class="th-sm">{{transfert.receveAt|date('d-m-Y H:i:s')}}</td>
-                                <td class="text-monospace" style="font-size:14px;">
-                                    <p class="badge badge-success" style="font-size:14px;">Retrait effectué.</p>
-                                </td>
-                            {% else %}
-                               <td class="th-sm">-/-</td>
-                            <td class="text-monospace" style="font-size:14px;">
-                                <p class="badge badge-warning" style="font-size:14px;">Retrait en attente.</p>
+                                {% if transfert.receveAt %}
+                                    <td class="th-sm">{{transfert.receveAt|date('d-m-Y H:i:s')}}</td>
+                                    <td class="text-monospace" style="font-size:14px;">
+                                        <p class="badge badge-success" style="font-size:14px;">Retrait effectué.</p>
+                                    </td>
+                                {% elseif transfert.paid is same as ('CANCELLED') %}
+                                    <td class="th-sm">
+                                        {% if transfert.receveAt %}
+                                            {{transfert.receveAt|date('d-m-Y H:i:s')}}
+                                        {%else%}
+                                            -/-
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-monospace" style="font-size:14px;">
+                                        <p class="badge badge-danger" style="font-size:14px;">Transfert Annulé.</p>
+                                    </td>
+                                {% else %}
+                                    <td class="th-sm">-/-</td>
+                                    <td class="text-monospace" style="font-size:14px;">
+                                        <p class="badge badge-warning" style="font-size:14px;">Retrait en attente...</p>
+                                    </td>
+                                {% endif %}
+                            <td class="th-sm d-flex justify-content-center align-items-center">
+                                {% if not transfert.paid is same as ('CANCELLED') and not transfert.receveAt %}
+                                    <a class="btn btn-outline-danger btn-rounded btn-sm px-3 mr-1" href="{{ path('app_transfert_canceltransfert',{'id':transfert.id}) }}">Annuler</a>
+                                {% endif %}
+                                {% if transfert.facture %}
+                                    <a class="btn btn-outline-warning btn-rounded btn-sm" href="{{ path('receved',{'id':transfert.id}) }}">Voir</a>
+                                {% else %}
+                                    <a class="btn btn-outline-warning btn-rounded btn-sm" href="{{ path('sent',{'id':transfert.id}) }}">Voir</a>
+                                {% endif %}
                             </td>
-                            {% endif %}
 
-                            {% if transfert.facture %}
-                                <td class="th-sm"><a class="btn btn-outline-warning btn-rounded btn-sm" href="{{ path('receved',{'id':transfert.id}) }}">Voir</a></td>
-                            {% else %}
-                                <td class="th-sm"><a class="btn btn-outline-warning btn-rounded btn-sm" href="{{ path('sent',{'id':transfert.id}) }}">Voir</a></td>
-                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>

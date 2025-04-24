@@ -12,14 +12,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/user')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 class UserController extends AbstractController
 {
     public function __construct(private EntityManagerInterface $em){}
     #[Route(path: '/', name: 'user_index', methods: ['GET'])]
     public function index(SocietyRepository $societyRepository,UserRepository $userRepository): Response
     {
+        //redirectRoute to dashboard
+        return $this->redirectToRoute('dashboard');
+
+
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
             'society'=>$societyRepository->findAll(),

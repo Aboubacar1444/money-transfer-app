@@ -107,8 +107,10 @@
                             <td class="text-monospace" style="font-size:14px;">
                                 {% if transfert.receveAt %}
                                     <p class="badge badge-success" style="font-size:14px;">Retrait effectué.</p>
+                                {% elseif transfert.paid is same as ('CANCELLED') %}
+                                    <p class="badge badge-danger" style="font-size:14px;">Transfert annulé.</p>
                                 {% else %}
-                                    <p class="badge badge-warning" style="font-size:14px;">Retrait en attente.</p>
+                                    <p class="badge badge-danger" style="font-size:14px;">Retrait en attente...</p>
                                 {% endif %}
 
                             </td>
@@ -118,20 +120,29 @@
                     </tbody>
                     <tfoot style="margin-top:10px;">
                         <tr>
-                            <td colspan='13' class="font-weight-bold text-decoration-underline" style="font-size:14px;"><u>Solde Total Transfert</u>
+                            <td colspan='13' class="font-weight-bold" style="font-size:14px;">
+                                <u>Solde Total Transfert</u>:
                                 <br>
                                 CHINA: <span id="number" class="px-3">{{dayTotalChina|number_format(0,' ',' ')}}</span> {{ deviceChina }}
                                 <br/>
                                 AFRICA: <span id="number" class="px-3">{{dayTotalAfrica|number_format(0,' ',' ')}}</span> {{ deviceAfrica }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan='13' class="font-weight-bold" style="font-size:14px;"><u>Solde Total Retrait</u>:
+                                {#   END TOTAL TRANSFERT  #}
+                                <hr>
+                                <u>Solde Total Retrait</u>:
                                 <br>
-                               CHINA: <span id="number" class="px-3">{{dayTotalRetraitChina|number_format(0,' ',' ')}}</span> {{ deviceChina }}
+                                CHINA: <span id="number" class="px-3">{{dayTotalRetraitChina|number_format(0,' ',' ')}}</span> {{ deviceChina }}
                                 <br>
-                               AFRICA: <span id="number" class="px-3">{{dayTotalRetraitAfrica|number_format(0,' ',' ')}}</span> {{ deviceAfrica }}
+                                AFRICA: <span id="number" class="px-3">{{dayTotalRetraitAfrica|number_format(0,' ',' ')}}</span> {{ deviceAfrica }}
+                                {#   END TOTAL RETRAIT  #}
+                                <hr>
+                                <u>Solde Total Annulé </u>:
+                                <br>
+                                CHINA: <span id="number" class="px-3">{{dayTotalCancelledChina|number_format(0,' ',' ')}}</span> {{ deviceChina }}
+                                <br>
+                                AFRICA: <span id="number" class="px-3">{{dayTotalCancelledAfrica|number_format(0,' ',' ')}}</span> {{ deviceAfrica }}
+                                {#   END TOTAL CANCELLED  #}
                             </td>
+
                         </tr>
 
 {#                        <tr>#}

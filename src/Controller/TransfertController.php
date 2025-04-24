@@ -16,15 +16,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
-/**
- * @IsGranted("ROLE_USER")
- */
 #[Route(path: '/transfert')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 class TransfertController extends AbstractController
 {
     private WhatsAppService $whatsAppService;
@@ -80,6 +78,9 @@ class TransfertController extends AbstractController
             }else{
                 $agencysender = $agencyRepository->find($agencySetByAdmin) ?? false;
             }
+            // Traitement des numeros enlever + si existant
+            if ($transfert->getTel()[0] === '+') $transfert->setTel(ltrim($transfert->getTel(), '+'));
+            if ($transfert->getTelsender()[0] === '+') $transfert->setTelsender(ltrim($transfert->getTelsender(), '+'));
 
 
             if($this->getUser()->getAgency() || $agencysender) {
@@ -163,8 +164,14 @@ class TransfertController extends AbstractController
                 "Bien à vous "."`{$transfert->getDestinataire()}`".
                 ".\nMONEY - SERVICE";
             // ULTRA MSG OPTION
-            $this->whatsAppService->sendMessage($transfert->getTelsender(), $bodyDestinateur, "MONEY SERVICE");
-            $this->whatsAppService->sendMessage($transfert->getTel(), $bodyDestinataire, "MONEY SERVICE");
+//            $this->whatsAppService->sendMessage($transfert->getTelsender(), $bodyDestinateur, "MONEY SERVICE");
+//            $this->whatsAppService->sendMessage($transfert->getTel(), $bodyDestinataire, "MONEY SERVICE");
+
+
+            $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire, "MONEY SERVICE");
+            $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur, "MONEY SERVICE");
+            $this->whatsAppService->sendMessageUsingWaapi("14384090940", $bodyDestinateur, "MONEY SERVICE");
+
 
             $transfert->setAgent($this->getUser()->getFullname());
                 $transfert->setSecretid($secretCodeId);
@@ -307,8 +314,9 @@ class TransfertController extends AbstractController
                 "Montant payé: "."`{$amountToPaid}`"." $amountToPaidDevice. \n".
                 "Bien à vous "."`{$transfert->getDestinataire()}`".
                 ".\nTRAORE - SERVICE";
-            $this->whatsAppService->sendMessage($transfert->getTelsender(), $bodyDestinateur, "TRAORE SERVICE");
-            $this->whatsAppService->sendMessage($transfert->getTel(), $bodyDestinataire, "TRAORE SERVICE");
+
+            $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur, "TRAORE SERVICE");
+            $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire, "TRAORE SERVICE");
 
             $this->em->flush();
             $this->addFlash("success", "Rétrait effectué avec succès.");
@@ -380,5 +388,51 @@ class TransfertController extends AbstractController
             'amountToPaidDevice'=>$amountToPaidDevice,
         ]);
     }
+    #[Route(path: '/cancel/{id}', name: 'app_transfert_canceltransfert')]
+    public function cancelTransfert(AgencyRepository $agencyRepository,  Transfert $transfert, SocietyRepository $societyRepository): Response
+    {
+
+        //Cancel in SenderAgency
+        $senderAgency = $agencyRepository->findOneBy(['name'=>$transfert->getAgency()]);
+        $senderAgencyCaisse = $senderAgency->getCaisse() - $transfert->getMontant();
+        if ($transfert->getFrais() != null && $transfert->getFrais() != 1)
+            $senderAgencyCaisse = $senderAgencyCaisse - $transfert->getFrais();
+
+        $senderAgency->setCaisse($senderAgencyCaisse);
+        // Cancel In SocietyCaisse
+        foreach ($societyRepository->findAll() as $s){
+            $societyCaisse = $s->getCaisse() - $transfert->getMontant();
+            if ($transfert->getFrais() != null && $transfert->getFrais() != 1)
+                $societyCaisse = $societyCaisse - $transfert->getFrais();
+            $s->setCaisse($societyCaisse);
+        }
+
+//        if ($transfert->getReceveAt()){
+//            $receivedAgencyCaisse = $transfert->getTransagency()->getCaisse() + $transfert->getMontant();
+//            if ($transfert->getFrais() != null && $transfert->getFrais() != 1)
+//                $receivedAgencyCaisse = $receivedAgencyCaisse + $transfert->getFrais();
+//
+//            $transfert->getTransagency()->setCaisse($receivedAgencyCaisse);
+//
+//            foreach ($societyRepository->findAll() as $s){
+//                $societyCaisse = $s->getCaisse() + $transfert->getMontant();
+//                if ($transfert->getFrais() != null && $transfert->getFrais() != 1)
+//                  $societyCaisse = $societyCaisse + $transfert->getFrais();
+//                $s->setCaisse($societyCaisse);
+//            }
+//
+//        }
+
+        $transfert->setPaid("CANCELLED");
+
+        $this->em->flush();
+
+        $this->addFlash("success", "Le transfert d'argent a été annulé avec succès.");
+        return $this->redirectToRoute('dashboard');
+
+    }
+
+
+
 
 }

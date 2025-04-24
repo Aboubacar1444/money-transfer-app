@@ -20,16 +20,15 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER")
- */
+
 #[Route(path: '/dashboard')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 class DashboardController extends AbstractController
 {
     private ManagerRegistry $managerRegistry;
@@ -276,6 +275,8 @@ class DashboardController extends AbstractController
         $dayTotalAfrica = 0;
         $dayTotalRetraitChina = 0;
         $dayTotalRetraitAfrica = 0;
+        $totalCancelledChina = 0;
+        $totalCancelledAfrica = 0;
 
         $deviceChine = "YEN";
         $deviceAfrica = "FCFA";
@@ -292,9 +293,15 @@ class DashboardController extends AbstractController
 
             }
             if ($transfert->getAgency() == "CHINE") {
+                if ($transfert->getPaid() == "CANCELLED"){
+                    $totalCancelledChina += $transfert->getMontant();
+                }
                 $dayTotalChina += $transfert->getMontant();
             }
             else {
+                if ($transfert->getPaid() == "CANCELLED"){
+                    $totalCancelledAfrica += $transfert->getMontant();
+                }
                 $dayTotalAfrica += $transfert->getMontant();
             }
 
@@ -311,6 +318,9 @@ class DashboardController extends AbstractController
             'dayTotalAfrica' => $dayTotalAfrica,
             'dayTotalRetraitChina' => $dayTotalRetraitChina,
             'dayTotalRetraitAfrica' => $dayTotalRetraitAfrica,
+            'dayTotalCancelledChina' => $totalCancelledChina,
+            'dayTotalCancelledAfrica' => $totalCancelledAfrica,
+
             'deviceChina' => $deviceChine,
 
             'deviceAfrica' => $deviceAfrica,

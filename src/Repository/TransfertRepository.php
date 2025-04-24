@@ -24,7 +24,7 @@ class TransfertRepository extends ServiceEntityRepository
     //  * @return Transfert[] Returns an array of Transfert objects
     //  */
     /* */
-    public function findByDateOrAgency($date, Agency $agency = null)
+    public function findByDateOrAgency($date, ?Agency $agency = null)
     {
         $qb =  $this->createQueryBuilder('t')
             ->andWhere('t.sentAt LIKE :val')
