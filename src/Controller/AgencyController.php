@@ -68,10 +68,10 @@ class AgencyController extends AbstractController
         $society=$societyRepository->findAll();
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->em;
-            if ($agencyRepository->count([]) <= 3) {
-                $this->addFlash('success', "Vous ne pouvez pas ajouter plus de trois agences.");
-                return $this->redirectToRoute('dashboard');
-            }
+//            if ($agencyRepository->count([]) <= 3) {
+//                $this->addFlash('success', "Vous ne pouvez pas ajouter plus de trois agences.");
+//                return $this->redirectToRoute('dashboard');
+//            }
             foreach ($society as $s) {
                $caisseg=$s->getCaisse();
                $agencycaisse=$agency->getCaisse();
