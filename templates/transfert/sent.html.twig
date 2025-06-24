@@ -61,6 +61,7 @@
                     <div class="col-12 mx-auto">
                         <h3 class="col-6">Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> <span class="font-weight-bold">{{ device}} </span></h3>
                         <h3 class="col-6">Frais: <span id="number" class="font-weight-bold"> {{ transfert.frais|number_format(0,' ',' ') }}</span> <span class="font-weight-bold"> {{ fraisDevice}} </span></h3>
+                        <h3 class="col-6">Taux: <span id="number" class="font-weight-bold"> {{ transfert.taux }}</span></h3>
                         <h3 class="col-6">Montant à recevoir: <span id="number" class="font-weight-bold"> {{ amountToPaid|number_format(0,' ',' ') }}</span> <span class="font-weight-bold"> {{ amountToPaidDevice}} </span></h3>
                     </div>
                     <div class="col-md-12 mx-auto mt-1">
@@ -138,6 +139,7 @@
                     <div class="col-12 mx-auto">
                         <h3 class="col-6">Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> <span class="font-weight-bold">{{ device}} </span></h3>
                         <h3 class="col-6">Frais: <span id="number" class="font-weight-bold"> {{ transfert.frais|number_format(0,' ',' ') }}</span> <span class="font-weight-bold">{{ fraisDevice}} </span></h3>
+                        <h3 class="col-6">Taux: <span id="number" class="font-weight-bold"> {{ transfert.taux }} </span></h3>
                         <h3 class="col-6">Montant à recevoir: <span id="number" class="font-weight-bold"> {{ amountToPaid|number_format(0,' ',' ') }}</span> <span class="font-weight-bold">{{ amountToPaidDevice}} </span></h3>
                     </div>
                     {% if not is_granted("ROLE_AGENT") %}
