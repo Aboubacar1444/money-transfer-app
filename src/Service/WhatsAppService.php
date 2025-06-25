@@ -18,7 +18,7 @@ class WhatsAppService
 
     // Waapi token
     private ?string $waapiToken = 'I5BnUF1NpK2dz5Vq6TGiUAZeLsZ1oPKUwvgPEOg557d3a4fa';
-    private ?string $waapiInstanceId = '61238';
+    private ?string $waapiInstanceId = '75848';
 
     private string $apiUrl;
     public function __construct(
