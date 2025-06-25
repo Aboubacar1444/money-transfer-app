@@ -132,7 +132,7 @@ class DashboardController extends AbstractController
                 return $this->redirectToRoute('dashboard');
         }
 
-        $agent=$userRepository->findAll();
+        $agent=$userRepository->findBy([], ['id' => 'DESC']);
         if ($this->isGranted("ROLE_ADMIN")) {
             $agents=$userRepository->findBy(
                 [
@@ -140,7 +140,7 @@ class DashboardController extends AbstractController
                 ]
             );
 
-            $transfert=$transfertRepository->findAll();
+            $transfert=$transfertRepository->findBy([], ["id" => 'DESC']);
         }
         elseif ($this->isGranted("ROLE_SOUS_ADMIN")) {
             $agents=$userRepository->findBy(
@@ -149,7 +149,7 @@ class DashboardController extends AbstractController
                 ]
             );
 
-            $transfert=$transfertRepository->findAll();
+            $transfert=$transfertRepository->findBy([], ['sentAt' => 'DESC']);
         }
         elseif ($this->isGranted("ROLE_CHECKER")) {
             $agents=$userRepository->findBy(
@@ -158,7 +158,7 @@ class DashboardController extends AbstractController
                 ]
             );
 
-            $transfert=$transfertRepository->findAll();
+            $transfert=$transfertRepository->findBy([], ['id' => 'DESC']);
         }
         else{
             $agents=false;
