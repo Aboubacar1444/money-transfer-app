@@ -70,6 +70,11 @@ class TransfertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $agencySetByAdmin = $request->request->get('agencySetByAdmin');
             $tauxEchange = (float) $request->request->get('tauxEchange') ?? 1;
+            $telSender = ltrim(preg_replace('/\s+/', '', $form->getData()->getTelsender()), '+');
+            $telDest = ltrim(preg_replace('/\s+/', '', $form->getData()->getTel()), '+');
+
+            $transfert->setTelsender($telSender);
+            $transfert->setTel($telDest);
             $transfert->setTaux($tauxEchange);
             $secretCodeId = generateCode(10);
 
