@@ -24,6 +24,7 @@ class AgencyController extends AbstractController
     #[Route(path: '/', name: 'agency_index', methods: ['GET', 'POST', 'PUT', 'DELETE'])]
     public function index(Request $request, UserPasswordHasherInterface $passwordEncoder, SocietyRepository $societyRepository, AgencyRepository $agencyRepository): Response
     {
+        return $this->redirectToRoute('dashboard');
         $user = new User();
         $form = $this->createForm(User1Type::class, $user);
         $form->handleRequest($request);
@@ -62,6 +63,7 @@ class AgencyController extends AbstractController
     #[Route(path: '/new', name: 'agency_new', methods: ['GET', 'POST'])]
     public function new(SocietyRepository $societyRepository, AgencyRepository $agencyRepository, Request $request): Response
     {
+        return $this->redirectToRoute('dashboard');
         $agency = new Agency();
         $form = $this->createForm(Agency1Type::class, $agency);
         $form->handleRequest($request);
@@ -94,6 +96,7 @@ class AgencyController extends AbstractController
     #[Route(path: '/{id}', name: 'agency_show', methods: ['GET'])]
     public function show(SocietyRepository $societyRepository, Agency $agency): Response
     {
+        return $this->redirectToRoute('dashboard');
         return $this->render('agency/show.html.twig', [
             'agency' => $agency,
             'society'=>$societyRepository->findAll(),
