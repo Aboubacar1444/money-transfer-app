@@ -205,14 +205,25 @@ class TransfertController extends AbstractController
         $transferDestination = $transfert->getTransagency()->getName();
         if ( $transferDestination == "CHINE") {
             $amountToPaid = sprintf('%.3f', $transfert->getMontant() / $transfert->getTaux());
-            $device = "FCFA";
-            $fraisDevice = "FCFA";
+            if ($transfert->getAgency() == "CI"){
+                $device = null;
+                $fraisDevice = null;
+            }else{
+                $device = "FCFA";
+                $fraisDevice = "FCFA";
+            }
+
             $amountToPaidDevice ="YEN";
         }
         elseif ($transferDestination == "MALI" || $transferDestination == "CI") {
             $amountToPaid = sprintf('%.3f', $transfert->getMontant() * $transfert->getTaux());
-            $device = "YEN";
-            $fraisDevice = "YEN";
+            if ($transferDestination == "CI"){
+                $device = null;
+                $fraisDevice = null;
+            }else{
+                $device = "YEN";
+                $fraisDevice = "YEN";
+            }
             $amountToPaidDevice ="FCFA";
         }
         else {
