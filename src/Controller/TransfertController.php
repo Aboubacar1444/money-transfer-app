@@ -13,6 +13,7 @@ use App\Repository\TransfertRepository;
 use App\Repository\UserRepository;
 use App\Service\WhatsAppService;
 use Doctrine\ORM\EntityManagerInterface;
+use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -190,7 +191,6 @@ class TransfertController extends AbstractController
             $amountToPaid = (float) $amountToPaid;
             if ($device){
                 $bodyDestinateur = "Transfert d'argent -> `$transferDestination`. \n".
-
                     "Total:". "`{$transfert->getMontant()}`"." $device. \n".
                     "Frais: "."`{$transfert->getFrais()}`"." $fraisDevice. \n".
 //                    "Frais payé: "."`{$transfert->getPaid()}`".". \n".
@@ -208,8 +208,13 @@ class TransfertController extends AbstractController
                     "Code de retrait: `$secretCodeId`. \n".
                     "Bien à vous "."`{$transfert->getDestinataire()}`".
                     ".\nWAKANE - TRANSFERT";
+
+                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire);
+                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaapi("14384090940", $bodyDestinateur);
+
             }
-            else {
+            if (is_null($device)) {
                 $bodyDestinateur = "Transfert d'argent -> `$transferDestination`. \n".
                     "Montant à recevoir: "."`$amountToPaid`"." $amountToPaidDevice. \n".
                     "A : `{$transfert->getDestinataire()}` \n".
@@ -221,16 +226,20 @@ class TransfertController extends AbstractController
                     "Code de retrait: `$secretCodeId`. \n".
                     "Bien à vous "."`{$transfert->getDestinataire()}`".
                     ".\nWAKANE - TRANSFERT";
-            }
 
+                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire);
+                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaapi("14384090940", $bodyDestinateur);
+
+            }
+//            dd($bodyDestinataire, $bodyDestinateur, $transfert->getTel(), $transfert->getTelsender());
             // ULTRA MSG OPTION
 //            $this->whatsAppService->sendMessage($transfert->getTelsender(), $bodyDestinateur, "MONEY SERVICE");
 //            $this->whatsAppService->sendMessage($transfert->getTel(), $bodyDestinataire, "MONEY SERVICE");
 
-//
-//            $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire, "WAKANE TRANSFERT");
-//            $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur, "WAKANE TRANSFERT");
-//            $this->whatsAppService->sendMessageUsingWaapi("14384090940", $bodyDestinateur, "WAKANE TRANSFERT");
+
+
+
 
 
                 $transfert->setAgent($this->getUser()->getFullname());
@@ -415,8 +424,12 @@ class TransfertController extends AbstractController
                     "Montant payé: "."`{$amountToPaid}`"." $amountToPaidDevice. \n".
                     "Bien à vous "."`{$transfert->getDestinataire()}`".
                     ".\nWAKANE - TRANSFERT";
+
+                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire);
+
             }
-            else{
+            if (is_null($device)) {
                 $bodyDestinateur = "Retrait d'argent -> `$transferDestination`. \n".
                     "Montant payé: "."`{$amountToPaid}`"." $amountToPaidDevice. \n".
                     "Bien à vous "."`{$transfert->getDestinateur()}`".
@@ -426,11 +439,13 @@ class TransfertController extends AbstractController
                    "Montant payé: "."`{$amountToPaid}`"." $amountToPaidDevice. \n".
                     "Bien à vous "."`{$transfert->getDestinataire()}`".
                     ".\nWAKANE - TRANSFERT";
+
+                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire);
+
             }
 
 
-            $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur, "WAKANE - TRANSFERT");
-            $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire, "WAKANE - TRANSFERT");
 
             $this->em->flush();
             $this->addFlash("success", "Rétrait effectué avec succès.");
