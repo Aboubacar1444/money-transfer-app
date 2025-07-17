@@ -242,6 +242,7 @@
                             <th class="th-sm">Agence de dépôt</th>
                             <th class="th-sm">Agence de retrait</th>
                             <th class="th-sm">Montant</th>
+                            <th class="th-sm">TransactId</th>
                             <th class="th-sm">frais</th>
                             <th class="th-sm">Date dépôt</th>
                             <th class="th-sm">Date rétrait</th>
@@ -278,6 +279,7 @@
                             {% endif %}
 
                             <td class="th-sm">{{transfert.montant|number_format(0,' ', ' ')}}</td>
+                            <td class="th-sm">{{transfert.transacId|number_format(0,' ', ' ')}}</td>
                             {% if transfert.frais %}
                                 <td class="th-sm">{{transfert.frais|number_format(0,' ', ' ')}}</td>
                             {% else %}

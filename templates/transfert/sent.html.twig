@@ -34,16 +34,18 @@
                 </div>
             {% endfor %}
             <div class="row mask aqua-gradient-rgba">
-                <h1 class="mx-auto font-weight-bold white-text">
+                <h1 class="font-weight-bold white-text col-md-12 text-center  justify-content-center align-items-center">
                     {% if transfert.agency == "MALI" %}
                         Transfert d'argent N° 00223 - {{transfert.id|strPad(4,'0')}}
-                    {%elseif transfert.agency == "CI"  %}
-                        Transfert d'argent N° 00225 - {{transfert.id|strPad(4,'0')}}
+                    {%elseif transfert.agency == "CI" or transfert.agency == "CI II"  %}
+                        Transfert d'argent N° 00225 - {{transfert.transacId|strPad(4,'0')}}
                     {%elseif transfert.agency == "CHINE"  %}
                         Transfert d'argent N° 0086 - {{transfert.id|strPad(4,'0')}}
                     {% endif %}
-
                 </h1>
+                {% if transfert.agency == "CI II" %}
+                    <i class="font-weight-bold col-md-12 text-center h4 white-text"><u>Référence</u>:  {{ transfert.reference }}</i>
+                {% endif %}
             </div>
             <div class="row mask mb-1">
                 <h3 class="mx-auto font-weight-bolder pt-1 pr-0 col-md-6"> <u>Expéditeur</u>: {{ transfert.destinateur }}</h3>
@@ -115,15 +117,18 @@
                 </div>
             {% endfor %}
             <div class="row mask aqua-gradient-rgba">
-                <h1 class="mx-auto font-weight-bold white-text">
+                <h1 class="font-weight-bold white-text col-md-12 text-center  justify-content-center align-items-center">
                     {% if transfert.agency == "MALI" %}
                         Transfert d'argent N° 00223 - {{transfert.id|strPad(4,'0')}}
-                    {%elseif transfert.agency == "CI"  %}
-                        Transfert d'argent N° 00225 - {{transfert.id|strPad(4,'0')}}
+                    {%elseif transfert.agency == "CI" or transfert.agency == "CI II"  %}
+                        Transfert d'argent N° 00225 - {{transfert.transacId|strPad(4,'0')}}
                     {%elseif transfert.agency == "CHINE"  %}
                         Transfert d'argent N° 0086 - {{transfert.id|strPad(4,'0')}}
                     {% endif %}
                 </h1>
+                {% if transfert.agency == "CI II" %}
+                    <i class="font-weight-bold col-md-12 text-center h4 white-text"><u>Référence</u>:  {{ transfert.reference }}</i>
+                {% endif %}
             </div>
             <div class="row mask mb-1">
                 <h3 class="mx-auto font-weight-bolder pt-1 pr-0 col-md-6"> <u>Expéditeur</u>: {{ transfert.destinateur }}</h3>

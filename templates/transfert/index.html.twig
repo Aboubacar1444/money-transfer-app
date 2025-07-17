@@ -55,22 +55,41 @@
                             <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="status" value="NON" />
                             <label class="form-check-label" for="inlineCheckbox1" id="f">Frais payés à la réception.(par défaut)</label>
                         </div>
-                        {% if not app.user.agency %}
-                            <div class="justify-content-center align-items-center col-lg-6 col-md-6 md-form">
-                                <select name="agencySetByAdmin" id="agencySetByAdmin" class="form-control md-form form-select">
-                                    <option disabled selected>Selectionnez l'agence d'envoi</option>
-                                    {% for agency in agencies %}
-                                    <option value="{{ agency.id }}" class="form-control form-select">{{ agency.name }}</option>
-                                    {% endfor %}
-                                </select>
-                                <h4 style="display:none;" id="showAgencySeyByAdmin">Solde: <span id="caisseAgencySetByAdmin" class="font-weight-bold"> </span> FCFA</h4>
+                            {% if not app.user.agency %}
+                                <div class="col-md-4 m-auto ">
+                                    <select name="agencySetByAdmin" id="agencySetByAdmin" class="form-control md-form form-select">
+                                        <option disabled selected>Choix Agence d'envoi</option>
+                                        {% for agency in agencies %}
+                                        <option value="{{ agency.id }}" class="form-control form-select">{{ agency.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <h6 style="display:none;" id="showAgencySeyByAdmin">Solde: <span id="caisseAgencySetByAdmin" class="font-weight-bold"> </span> FCFA</h6>
+                                </div>
+                            {% endif %}
+                            {% if not app.user.agency or app.user.agency.name == "CI II" %}
+                                <div class="col-md-4 m-auto"
+                                     style="
+                                         {% if not app.user.agency %}
+                                            {{  'display:none;' }}
+                                         {% elseif app.user.agency.name == "CI II" %}
+                                            {{ 'display:true;' }}
+                                           {% endif %}
+                                             "
+                                     id="referenceField">
+                                    <input type="text" name="reference" id="referenceInput"
+                                           placeholder="Ref Ex: Le/15/07/ 2025Z. C / CODE /1635"
+                                           class=" form-control justify-content-between mx-auto"
+                                            {% if  app.user.agency and app.user.agency.name == "CI II" %}
+                                                {{  "required = 'required'"}}
+                                            {% endif %}
+                                    >
+                                </div>
+                            {% endif %}
+                            <div class="col-md-4 m-auto">
+                                {{ form_row(form.transagency) }}
+                                <h6 style="display:none;" id="show">Solde: <span id="caisse" class="font-weight-bold"> </span> FCFA</h6>
                             </div>
-                        {% endif %}
 
-                        <div class="justify-content-center align-items-center col-lg-6 col-md-6 md-form">
-                            {{ form_row(form.transagency) }}
-                            <h4 style="display:none;" id="show">Solde: <span id="caisse" class="font-weight-bold"> </span> FCFA</h4>
-                        </div>
 
                     </div>
                 </div>
@@ -110,6 +129,7 @@
             }
 
             function getSolde(agency, $type){
+
               $.ajax({
                 method: 'GET',
                 url: '{{path("getagency", {"id":'+'})}}'+agency,
@@ -119,13 +139,21 @@
                     //console.log(response);
                     if(response && $type == "recepAgency" )
                     {
-                        $('#caisse').html(response);
+                        $('#caisse').html(response['solde']);
                         $('#show').css('display','');
+
                     }
                     if(response && $type == "sendAgency" )
                     {
-                        $('#caisseAgencySetByAdmin').html(response);
+                        $('#caisseAgencySetByAdmin').html(response['solde']);
                         $('#showAgencySeyByAdmin').css('display','');
+                        if(response['name'] == "CI II") {
+                            $('#referenceField').css('display', '')
+                            $('#referenceInput').attr('required', 'required')
+                        }else {
+                            $('#referenceField').css('display', 'none')
+                            $('#referenceInput').attr('required', false)
+                        }
                     }
                 },
                 error: function(error)

@@ -67,6 +67,12 @@ class Transfert
     #[ORM\Column]
     private ?float $taux = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $reference = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $transacId = null;
+
 
 
     public function setId(int $id): static
@@ -299,6 +305,30 @@ class Transfert
     public function setTaux(float $taux): static
     {
         $this->taux = $taux;
+
+        return $this;
+    }
+
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function setReference(?string $reference): static
+    {
+        $this->reference = $reference;
+
+        return $this;
+    }
+
+    public function getTransacId(): ?int
+    {
+        return $this->transacId;
+    }
+
+    public function setTransacId(?int $transacId): static
+    {
+        $this->transacId = $transacId;
 
         return $this;
     }

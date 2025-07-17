@@ -1,182 +1,107 @@
 {% extends "base.html.twig" %}
 {% block print %}
-    <link rel="stylesheet" media="print" href="{{ asset('/assets/css/print.css') }}" />
+    <link rel="stylesheet" media="print" href="{{ asset('/assets/css/print.css') }}"/>
 {% endblock %}
 {% block body %}
-    {% if transfert.client %}
-        <section class="container card" style="margin-top:5px!important;">
-            {% for society in society %}
-                <div class="row mask">
-                    {% if society.logo %}
+    <section class="container card" style="margin-top:10px!important;">
+        {% for society in society %}
+            <div class="row mask">
+                {% if society.logo %}
                     <div class="col-md-12 mb-2">
                         <div class="justify-content-center align-items-center mx-auto my-auto text-center">
-                            <img src="{{asset('./assets/files/' ~ society.logo)}}" class="img-fluid w-20 text-center" width="50px"  alt="logo">
+                            <img src="{{ asset('./assets/files/' ~ society.logo) }}" class="img-fluid w-20 text-center"
+                                 width="50px" alt="logo">
                         </div>
                     </div>
-                    {% endif %}
-                    <div class="col-md-12">
-                        <h1 class="mx-auto font-weight-bold text-center">{{society.name}}</h1>
-                    </div>
-                    <div class="row mx-auto">
-                        <div class="col-md-12 mx-auto mb-1">
-                            <h5 class="text-center font-weight-bold"> {{ society.job }}</h5>
-                            <h5 class="text-center font-weight-bold"> {{ society.description }}</h5>
-                            <h5 class="text-center font-weight-bold"> {{ app.user.agency ? app.user.agency.email : society.email }}</h5>
-                        </div>
-                        <div class="col-md-12 mx-auto text-center">
-                            <h5 class="text-center font-weight-bold"> {% if app.user.agency %} {{ app.user.agency.tel }} {% else %} {{ society.tel }} {% endif %}</h5>
-                            <code class="font-weight-bold font-italic mt-1 text-center justify-content-center align-center">Votre Satisfation, notre engagement!</code>
-                        </div>
-                        <div class="col-md-12 mx-auto rounded">
-                            <h5 class="text-center font-weight-bold border rounded-sm border-warning p-2" style=""> <u>Agence</u>: {{ transfert.agency }} </h5>
-                            <h5 class="text-center font-weight-bold border rounded-sm border-warning p-2" style=""> <u>Par</u>: {{ transfert.agent }}</h5>
-                        </div>
-                    </div>
+                {% endif %}
+                <div class="col-md-12">
+                    <h1 class="mx-auto font-weight-bold text-center">{{ society.name }}</h1>
                 </div>
-            {% endfor %}
-            <div class="row mask aqua-gradient-rgba">
-                <h1 class="mx-auto font-weight-bold white-text">
-                    {% if transfert.agency == "MALI" %}
-                        Transfert d'argent N° 00223 - {{transfert.id|strPad(4,'0')}}
-                    {%elseif transfert.agency == "CI"  %}
-                        Transfert d'argent N° 00225 - {{transfert.id|strPad(4,'0')}}
-                    {%elseif transfert.agency == "CHINE"  %}
-                        Transfert d'argent N° 0086 - {{transfert.id|strPad(4,'0')}}
-                    {% endif %}
-                </h1>
-            </div>
-            <div class="row mask">
-                <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"> <u>Expéditeur</u>: {{ transfert.client.fullname }}</h3>
-                <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"> <u>Tel</u>: {{ transfert.client.tel }}</h3>
-            </div>
-            <div class="row mask">
-                <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"> <u>Destinataire</u>: {{ transfert.destinataire }}</h3>
-                <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"> <u>Tel</u>: {{ transfert.tel }}</h3>
-            </div>
-            <div class="font-weight-bold text-black-50 mx-auto">
-                {{transfert.sentAt|date('d / m / Y - H:i:s')}}
-            </div>
-            <div class="container mt-1">
                 <div class="row mx-auto">
-                    <div class="col-8 mx-auto">
-                        <h3 class="col-6">Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> {{ device}} </h3>
+                    <div class="col-md-12 mx-auto mb-1">
+                        <h5 class="text-center font-weight-bold"> {{ society.job }}</h5>
+                        <h5 class="text-center font-weight-bold"> {{ society.description }}</h5>
+                        <h5 class="text-center font-weight-bold"> {{ app.user.agency ? app.user.agency.email : society.email }}</h5>
                     </div>
-                    {# <div class="col-md-8 mx-auto">
-                        <h3>Secret id: <span id="" class="font-weight-bold"> {{ transfert.secretid }}</span></h3>
-                    </div> #}
-                    <div class="col-md-12 mx-auto mt-3">
-                        <h5><span id="inletter" class="inletter font-weight-bold"></span></h5>
+                    <div class="col-md-12 mx-auto text-center">
+                        <h5 class="text-center font-weight-bold"> {% if app.user.agency %} {{ app.user.agency.tel }} {% else %} {{ society.tel }} {% endif %}</h5>
+                        <code class="font-weight-bold font-italic mt-1 text-center justify-content-center align-center">Votre
+                            Satisfation, notre engagement!</code>
                     </div>
-
-                </div>
-            </div>
-            <div class="container mb-5">
-                <div class="row d-flex flex-1 text-center justify-content-center">
-                    <div class="col-md-4 font-weight-bolder mx-auto">
-                        <h3><u>Gérant</u>:</h3>
-                    </div>
-                    <div class="col-md-4 font-weight-bolder mx-auto">
-                        <h3><u>Comptable</u>:</h3>
-                    </div>
-                    <div class="col-md-4 font-weight-bolder mx-auto">
-                        <h3><u>Client</u>:</h3>
+                    <div class="col-md-12 mx-auto rounded">
+                        <h5 class="text-center font-weight-bold border rounded-sm border-warning p-2" style=""><u>Agence</u>: {{ transfert.agency }}
+                        </h5>
+                        <h5 class="text-center font-weight-bold border rounded-sm border-warning p-2" style="">
+                            <u>Par</u>: {{ transfert.agent }}</h5>
                     </div>
                 </div>
             </div>
-            {#  #}
+        {% endfor %}
+        <div class="row mask aqua-gradient-rgba">
+            <h1 class="font-weight-bold white-text col-md-12 text-center  justify-content-center align-items-center">
+                {% if transfert.agency == "MALI" %}
+                    Transfert d'argent N° 00223 - {{ transfert.id|strPad(4,'0') }}
+                {% elseif transfert.agency == "CI" or transfert.agency == "CI II" %}
+                    Transfert d'argent N° 00225 - {{ transfert.transacId|strPad(4,'0') }}
+                {% elseif transfert.agency == "CHINE" %}
+                    Transfert d'argent N° 0086 - {{ transfert.id|strPad(4,'0') }}
+                {% endif %}
+            </h1>
+            {% if transfert.agency == "CI II" %}
+                <i class="font-weight-bold col-md-12 text-center h4 white-text"><u>Référence</u>: {{ transfert.reference }}
+                </i>
+            {% endif %}
+        </div>
+        <div class="row mask">
+            <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"><u>Expéditeur</u>: {{ transfert.destinateur }}</h3>
+            <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"><u>Tel</u>: {{ transfert.telsender }}</h3>
+        </div>
+        <div class="row mask">
+            <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"><u>Destinataire</u>: {{ transfert.destinataire }}
+            </h3>
+            <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"><u>Tel</u>: {{ transfert.tel }}</h3>
+        </div>
+        <div class="font-weight-bold text-black-50 mx-auto">
+            {{ transfert.sentAt|date('d / m / Y - H:i:s') }}
+        </div>
+        <div class="container mt-1">
             <div class="row mx-auto">
-                <a  href="{{ path('receive',{'secretid':transfert.secretid,'id':transfert.id,'confirm':'gotit'}) }}" class="btn btn-rounded btn-lg btn-warning mx-auto text-center font-weight-bold"  role="button">Confirmer</a>
-            </div>
-        </section>
-    {% else %}
-        <section class="container card" style="margin-top:10px!important;">
-            {% for society in society %}
-                <div class="row mask">
-                    {% if society.logo %}
-                    <div class="col-md-12 mb-2">
-                        <div class="justify-content-center align-items-center mx-auto my-auto text-center">
-                            <img src="{{asset('./assets/files/' ~ society.logo)}}" class="img-fluid w-20 text-center" width="50px"  alt="logo">
-                        </div>
-                    </div>
-                    {% endif %}
-                    <div class="col-md-12">
-                        <h1 class="mx-auto font-weight-bold text-center">{{society.name}}</h1>
-                    </div>
-                    <div class="row mx-auto">
-                        <div class="col-md-12 mx-auto mb-1">
-                            <h5 class="text-center font-weight-bold"> {{ society.job }}</h5>
-                            <h5 class="text-center font-weight-bold"> {{ society.description }}</h5>
-                            <h5 class="text-center font-weight-bold"> {{ app.user.agency ? app.user.agency.email : society.email }}</h5>
-                        </div>
-                        <div class="col-md-12 mx-auto text-center">
-                            <h5 class="text-center font-weight-bold"> {% if app.user.agency %} {{ app.user.agency.tel }} {% else %} {{ society.tel }} {% endif %}</h5>
-                            <code class="font-weight-bold font-italic mt-1 text-center justify-content-center align-center">Votre Satisfation, notre engagement!</code>
-                        </div>
-                        <div class="col-md-12 mx-auto rounded">
-                            <h5 class="text-center font-weight-bold border rounded-sm border-warning p-2" style=""> <u>Agence</u>: {{ transfert.agency }} </h5>
-                            <h5 class="text-center font-weight-bold border rounded-sm border-warning p-2" style=""> <u>Par</u>: {{ transfert.agent }}</h5>
-                        </div>
-                    </div>
+                <div class="col-8 mx-auto">
+                    <h3 class="col-6">Montant: <span id="number"
+                                                     class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> {{ device }}
+                    </h3>
                 </div>
-            {% endfor %}
-            <div class="row mask aqua-gradient-rgba">
-                <h1 class="mx-auto font-weight-bold white-text">
-                    {% if transfert.agency == "MALI" %}
-                        Transfert d'argent N° 00223 - {{transfert.id|strPad(4,'0')}}
-                    {%elseif transfert.agency == "CI"  %}
-                        Transfert d'argent N° 00225 - {{transfert.id|strPad(4,'0')}}
-                    {%elseif transfert.agency == "CHINE"  %}
-                        Transfert d'argent N° 0086 - {{transfert.id|strPad(4,'0')}}
-                    {% endif %}
-                </h1>
-            </div>
-            <div class="row mask">
-                <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"> <u>Expéditeur</u>: {{ transfert.destinateur }}</h3>
-                <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"> <u>Tel</u>: {{ transfert.telsender }}</h3>
-            </div>
-            <div class="row mask">
-                <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"> <u>Destinataire</u>: {{ transfert.destinataire }}</h3>
-                <h3 class="mx-auto font-weight-bolder pt-3 pr-0 col-md-12"> <u>Tel</u>: {{ transfert.tel }}</h3>
-            </div>
-            <div class="font-weight-bold text-black-50 mx-auto">
-                {{transfert.sentAt|date('d / m / Y - H:i:s')}}
-            </div>
-            <div class="container mt-1">
-                <div class="row mx-auto">
-                    <div class="col-8 mx-auto">
-                        <h3 class="col-6">Montant: <span id="number" class="font-weight-bold"> {{ transfert.montant|number_format(0,' ',' ') }}</span> {{ device}} </h3>
-                    </div>
-                    {# <div class="col-md-8 mx-auto">
-                        <h3>Secret id: <span id="" class="font-weight-bold"> {{ transfert.secretid }}</span></h3>
-                    </div> #}
-                    <div class="col-md-12 mx-auto mt-3 text-right">
-                        <h5><span id="inletter" class="inletter font-weight-bold"></span></h5>
-                    </div>
+                {# <div class="col-md-8 mx-auto">
+                            <h3>Secret id: <span id="" class="font-weight-bold"> {{ transfert.secretid }}</span></h3>
+                        </div> #}
+                <div class="col-md-12 mx-auto mt-3 text-right">
+                    <h5><span id="inletter" class="inletter font-weight-bold"></span></h5>
                 </div>
             </div>
-            {# <div class="container mb-5">
-                <div class="row text-center justify-content-center">
-                    <div class="col-md-4 font-weight-bolder">
-                        <h3><u>Gérant</u>:</h3>
+        </div>
+        {# <div class="container mb-5">
+                    <div class="row text-center justify-content-center">
+                        <div class="col-md-4 font-weight-bolder">
+                            <h3><u>Gérant</u>:</h3>
+                        </div>
+                        <div class="col-md-4 font-weight-bolder">
+                            <h3><u>Comptable</u>:</h3>
+                        </div>
+                        <div class="col-md-4 font-weight-bolder">
+                            <h3><u>Client</u>:</h3>
+                        </div>
                     </div>
-                    <div class="col-md-4 font-weight-bolder">
-                        <h3><u>Comptable</u>:</h3>
-                    </div>
-                    <div class="col-md-4 font-weight-bolder">
-                        <h3><u>Client</u>:</h3>
-                    </div>
-                </div>
-            </div> #}
-            {#  #}
-            <div class="row mx-auto">
-                <a name="" href="{{ path('receive',{'secretid':transfert.secretid,'id':transfert.id,'confirm':'gotit'}) }}" class="btn btn-rounded btn-lg btn-warning mx-auto text-center font-weight-bold"  role="button">Confirmer</a>
-            </div>
-        </section>
-    {% endif %}
+                </div> #}
+        {#  #}
+        <div class="row mx-auto">
+            <a name="" href="{{ path('receive',{'secretid':transfert.secretid,'id':transfert.id,'confirm':'gotit'}) }}"
+               class="btn btn-rounded btn-lg btn-warning mx-auto text-center font-weight-bold" role="button">Confirmer</a>
+        </div>
+    </section>
 {% endblock %}
 {% block ScriptP %}
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
 
             function formatDate(date) {
                 var d = new Date(date),
@@ -192,18 +117,19 @@
                 return [year, month, day].join('-');
             }
 
-            function Print(){
+            function Print() {
                 var today = new Date();
                 var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
                 $('#time').text(time);
                 return window.print();
             }
-            $('#print').click(function(){
+
+            $('#print').click(function () {
 
                 Print();
             });
 
-            $('.inletter').text('Arrêtée à la somme de: ' +NumberToLetter($('#number').text() )+' {{ device }}');
+            $('.inletter').text('Arrêtée à la somme de: ' + NumberToLetter($('#number').text()) + ' {{ device }}');
 
         });
     </script>

@@ -24,7 +24,7 @@ class TransfertType extends AbstractType
                     'placeholder'=>'Montant à envoyé',
                     'class'=>'',
                 ],
-                
+
             ])
             ->add('frais', NumberType::class,[
                 'label'=>false,
@@ -75,7 +75,7 @@ class TransfertType extends AbstractType
                 },
                 'required'=>true,
                 'attr' => [
-                    'class' => "custom-select form-select",
+                    'class' => "form-control md-form",
                     'data-live-search' => "true",
                     'data-size' => "sm",
                     'data-width' => "80%",
