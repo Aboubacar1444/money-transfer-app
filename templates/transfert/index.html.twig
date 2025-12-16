@@ -94,7 +94,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <button type="submit" class="btn aqua-gradient btn-rounded font-weight-bold mx-auto" id="import">Valider</button>
+                    <button type="submit" class="btn aqua-gradient btn-rounded font-weight-bold mx-auto" id="import" >Valider</button>
                 </div>
                 {{ form_end(form) }}
             </div>
@@ -103,6 +103,9 @@
 {% block ScriptP %}
     <script>
         $(document).ready(function(){
+            $("#import").click(function(){
+               $(this).attr("disabled", "disabled");
+            })
             //$('.mdb-select').materialSelect();
             $("#inlineCheckbox1").click(function(){
                 if($(this).is(":checked")){
