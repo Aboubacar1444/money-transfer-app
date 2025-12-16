@@ -103,7 +103,7 @@
 {% block ScriptP %}
     <script>
         $(document).ready(function(){
-            $("#import").click(function(){
+            $("#import").submit(function(){
                $(this).attr("disabled", "disabled");
             })
             //$('.mdb-select').materialSelect();
