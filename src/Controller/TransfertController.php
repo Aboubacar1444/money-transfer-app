@@ -208,10 +208,16 @@ class TransfertController extends AbstractController
                     "Code de retrait: `$secretCodeId`. \n".
                     "Bien à vous "."`{$transfert->getDestinataire()}`".
                     ".\nWAKANE - TRANSFERT";
+                $data = [
+                    $transfert->getTel() => $bodyDestinataire,
+                    $transfert->getTelsender() => $bodyDestinateur,
+                    "14384090940" => $bodyDestinateur,
+                ];
+//                dd($data);
 
-//                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire);
-//                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur);
-//                $this->whatsAppService->sendMessageUsingWaapi("14384090940", $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaSenderApi($transfert->getTel(), $bodyDestinataire);
+                $this->whatsAppService->sendMessageUsingWaSenderApi($transfert->getTelsender(), $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaSenderApi("14384090940", $bodyDestinateur);
 
             }
             if (is_null($device)) {
@@ -227,9 +233,9 @@ class TransfertController extends AbstractController
                     "Bien à vous "."`{$transfert->getDestinataire()}`".
                     ".\nWAKANE - TRANSFERT";
 
-//                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire);
-//                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur);
-//                $this->whatsAppService->sendMessageUsingWaapi("14384090940", $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaSenderApi($transfert->getTel(), $bodyDestinataire);
+                $this->whatsAppService->sendMessageUsingWaSenderApi($transfert->getTelsender(), $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaapi("14384090940", $bodyDestinateur);
 
             }
 //            dd($bodyDestinataire, $bodyDestinateur, $transfert->getTel(), $transfert->getTelsender());
@@ -424,8 +430,8 @@ class TransfertController extends AbstractController
                     "Montant payé: "."`{$amountToPaid}`"." $amountToPaidDevice. \n".
                     "Bien à vous "."`{$transfert->getDestinataire()}`".
                     ".\nWAKANE - TRANSFERT";
-//                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur);
-//                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire);
+                $this->whatsAppService->sendMessageUsingWaSenderApi($transfert->getTelsender(), $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaSenderApi($transfert->getTel(), $bodyDestinataire);
 
             }
             if (is_null($device)) {
@@ -439,8 +445,8 @@ class TransfertController extends AbstractController
                     "Bien à vous "."`{$transfert->getDestinataire()}`".
                     ".\nWAKANE - TRANSFERT";
 
-//                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTelsender(), $bodyDestinateur);
-//                $this->whatsAppService->sendMessageUsingWaapi($transfert->getTel(), $bodyDestinataire);
+                $this->whatsAppService->sendMessageUsingWaSenderApi($transfert->getTelsender(), $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaSenderApi($transfert->getTel(), $bodyDestinataire);
 
             }
 
