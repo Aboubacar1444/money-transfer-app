@@ -235,7 +235,7 @@ class TransfertController extends AbstractController
 
                 $this->whatsAppService->sendMessageUsingWaSenderApi($transfert->getTel(), $bodyDestinataire);
                 $this->whatsAppService->sendMessageUsingWaSenderApi($transfert->getTelsender(), $bodyDestinateur);
-                $this->whatsAppService->sendMessageUsingWaapi("14384090940", $bodyDestinateur);
+                $this->whatsAppService->sendMessageUsingWaSenderApi("14384090940", $bodyDestinateur);
 
             }
 //            dd($bodyDestinataire, $bodyDestinateur, $transfert->getTel(), $transfert->getTelsender());
